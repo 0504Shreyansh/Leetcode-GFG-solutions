@@ -118,23 +118,23 @@ struct Node
 }; */
 
 /*You are required to complete below method */
-void getPaths(Node* root, vector<vector<int>> &ans, vector<int> v) {
+void getPaths(Node* root, int size, vector<int> &v) {
     if(!root) return;
-    v.push_back(root->data);
+    size++;
     if(!root->left && !root->right)
-        ans.push_back(v);
-    getPaths(root->left,ans,v);
-    getPaths(root->right,ans,v);
+        v.push_back(size);
+    getPaths(root->left,size,v);
+    getPaths(root->right,size,v);
 }
 void pathCounts(Node *root)
 {
-    vector<vector<int>> ans;
+    int size = 0;
     vector<int> v;
-    getPaths(root,ans,v);
+    getPaths(root,size,v);
     
     map<int,int> mp;
-    for(auto i:ans)
-        mp[i.size()]++;
+    for(auto i:v)
+        mp[i]++;
     for(auto i:mp) 
         cout<<i.first<<' '<<i.second<<" $";
 }
