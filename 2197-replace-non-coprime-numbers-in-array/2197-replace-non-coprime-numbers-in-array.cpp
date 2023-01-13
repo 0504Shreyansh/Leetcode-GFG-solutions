@@ -1,14 +1,10 @@
 class Solution {
 public:
-    long long gcd(long long a, long long b) {
-        if(a==0) return b;
-        return gcd(b%a,a);
-    }
     vector<int> replaceNonCoprimes(vector<int>& nums) {
         if(nums.size()==1)
             return nums;
         vector<int> ans;
-        stack<long long> st;
+        stack<int> st;
         
         for(auto i:nums) {
             // if(st.empty())
@@ -17,10 +13,10 @@ public:
             //and keep updating the current ele to push
             while(st.size()) {
                 // cout<<"GCD : "<<i<<' '<<top<<' '<<gcd(i,top)<<endl;
-                if(gcd(i,st.top())>1) {
-                    long long top = st.top();
+                if(__gcd(i,st.top())>1) {
+                    int top = st.top();
                     st.pop();
-                    i = (i*top)/gcd(i,top);
+                    i = lcm(i,top);
                 } else 
                     break;
             }
