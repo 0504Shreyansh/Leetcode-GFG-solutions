@@ -8,16 +8,14 @@ public:
         
         int i = 0, j = 0, ans = INT_MAX;
         int sum = 0;
+        
         while(j<nums.size()) {
             sum += nums[j];
-            if(sum<target)
-                j++;
-            else {
-                while(sum>=target) {
-                    ans = min(ans, j-i+1);
-                    sum -= nums[i++];
-                } j++;
-            }
+            while(sum>=target) {
+                ans = min(ans, j-i+1);
+                sum -= nums[i++];
+            } 
+            j++;
             // cout << i << ' ' << j << ' ' << sum << ' ' << ans << endl;
         }
         
