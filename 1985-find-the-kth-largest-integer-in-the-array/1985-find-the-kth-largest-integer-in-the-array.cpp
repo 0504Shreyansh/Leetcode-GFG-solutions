@@ -1,4 +1,8 @@
 class Solution {
+/*1. Converting string to int won't work.
+  2. Push all the strings sorted by the size and maintain the strings in a sorted way in priority queue.{string_size,sorted_list_of_strings_of_size(string _size)}
+  3. 
+*/
 public:
     string kthLargestNumber(vector<string>& nums, int k) {
         
@@ -23,7 +27,7 @@ public:
         }
         vector<string> v = pq.top().second;
         while(--k) {
-            cout<<v.back()<<endl;
+            // cout<<v.back()<<endl;
             v.pop_back();
         }
         return v.back();
