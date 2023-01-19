@@ -20,24 +20,24 @@ public:
     }
     ListNode* swapPairs(ListNode* head) {
         
-        return recursiveSwapPairs(head);
+        // return recursiveSwapPairs(head);
         
-//         if(!head || !(head->next)) 
-//             return head;
+        if(!head || !(head->next)) 
+            return head;
         
-//         ListNode *curr = head, *prev = NULL;
-//         ListNode* ans = head->next;
+        ListNode *curr = head, *prev = NULL;
+        ListNode* ans = head->next;
         
-//         while(curr) {
-//             ListNode* temp = curr->next;
-//             curr->next = temp->next;
-//             temp->next = curr;
-//             if(prev)
-//                 prev->next = temp;
-//             prev = curr;
-//             curr = curr->next;
-//         }
+        while(curr && curr->next) {
+            ListNode* temp = curr->next;
+            curr->next = temp->next;
+            temp->next = curr;
+            if(prev)
+                prev->next = temp;
+            prev = curr;
+            curr = curr->next;
+        }
         
-//         return ans;
+        return ans;
     }
 };
