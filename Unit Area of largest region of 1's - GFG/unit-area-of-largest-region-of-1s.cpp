@@ -6,28 +6,17 @@ using namespace std;
 class Solution
 {
     private:
-    int bfs(vector<vector<int>>& grid, vector<vector<int>>&visited, int i, int j) {
-        visited[i][j] = 1;
-        int area = 0;
+    void dfs(vector<vector<int>>& grid, vector<vector<int>>&visited, int x, int y, int &area) {
+        visited[x][y] = 1;
         int n = grid.size(), m = grid[0].size();
-        queue<pair<int,int>> q;
-        q.push({i,j});
-        while(q.size()) {
-            int x = q.front().first, y = q.front().second;
-            q.pop();
-            // cout<<x<<' '<<y<<endl;
-            area++;
-            for(int a=-1;a<2;a++) {
-                for(int b=-1;b<2;b++) {
-                    int nx = x+a, ny = y+b;
-                    if(nx>=0&&nx<n&&ny>=0&&ny<m&&!visited[nx][ny]&&grid[nx][ny]) {
-                        visited[nx][ny] = 1;
-                        q.push({nx,ny});
-                    }
-                }
+        area++;
+        for(int a=-1;a<2;a++) {
+            for(int b=-1;b<2;b++) {
+                int nx = x+a, ny = y+b;
+                if(nx>=0&&nx<n&&ny>=0&&ny<m&&!visited[nx][ny]&&grid[nx][ny]) 
+                    dfs(grid,visited,nx,ny,area);
             }
         }
-        return area;
     }
     public:
     //Function to find unit area of the largest region of 1s.
@@ -39,8 +28,11 @@ class Solution
         
         for(int i=0;i<n;i++) {
             for(int j=0;j<m;j++) {
-                if(!visited[i][j] && grid[i][j]) 
-                    maxArea = max(maxArea, bfs(grid,visited,i,j));
+                if(!visited[i][j] && grid[i][j]) {
+                    int area = 0;
+                    dfs(grid,visited,i,j,area);
+                    maxArea = max(maxArea, area);
+                }
             }
         }
         
