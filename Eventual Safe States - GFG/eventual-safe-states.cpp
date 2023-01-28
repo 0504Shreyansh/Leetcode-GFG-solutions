@@ -10,36 +10,30 @@ using namespace std;
 
 class Solution {
   private:
-    bool dfs(vector<int> adj[], vector<int>&pathVis, vector<int>&check, int start) {
+    bool dfs(vector<int> adj[], vector<int>&pathVis, int start, vector<int> &safeNodes) {
         pathVis[start] += 2;
-        check[start] = 0;
         for(auto nbr: adj[start]) {
-            if(!pathVis[nbr] && dfs(adj,pathVis,check,nbr))
+            if(!pathVis[nbr] && dfs(adj,pathVis,nbr,safeNodes))
                 return true;
             else if(pathVis[nbr]==2) 
                 return true;
         }
-        check[start] = 1;
+        safeNodes.push_back(start);
         pathVis[start]--;
         return false;
     }  
   public:
     vector<int> eventualSafeNodes(int V, vector<int> adj[]) {
         
-        vector<int> pathVis(V), check(V);
+        vector<int> pathVis(V);
         vector<int> safeNodes;
         
         for(int i=0;i<V;i++) {
-            if(!pathVis[i]) {
-                dfs(adj,pathVis,check,i);
-            }
+            if(!pathVis[i])
+                dfs(adj,pathVis,i,safeNodes);
         }
-        
-        for(int i=0;i<V;i++) {
-            if(check[i])
-                safeNodes.push_back(i);
-        }
-        
+
+        sort(safeNodes.begin(),safeNodes.end());
         return safeNodes;
     }
 };
