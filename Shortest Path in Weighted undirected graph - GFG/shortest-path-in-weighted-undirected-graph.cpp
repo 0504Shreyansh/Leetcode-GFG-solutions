@@ -5,9 +5,10 @@ using namespace std;
 // } Driver Code Ends
 class Solution {
   public:
-  vector<vector<int>> paths;
+  
     vector<int> shortestPath(int n, int m, vector<vector<int>>& edges) {
         
+        //Create adjList
         vector<pair<int,int>> adj[n+1];
         for(auto i:edges) {
             int u = i[0], v = i[1], w = i[2];
@@ -15,20 +16,15 @@ class Solution {
             adj[v].push_back({u,w});
         }
         
-        // for(int i=0;i<n;i++) {
-        //     cout<<i<<"->";
-        //     for(auto e:adj[i]) cout<<e.first<<' '<<e.second<<"  ";cout<<endl; 
-        // }
-        
-        
+        //Initialise all the required DS
         priority_queue<pair<int,int>,vector<pair<int,int>>,greater<pair<int,int>>> pq;
         pq.push({0, 1});
         vector<int> dist(n+1, 1e9);
         dist[1] = 0;
-        // vector<vector<int>> paths(n+1);
-        paths.resize(n+2);
+        vector<vector<int>> paths(n+1);
         paths[1].push_back(1);
         
+        //Find the minimum distances and and shortest paths
         while(pq.size()) {
             int u = pq.top().second;
             vector<int> vec = paths[u];
@@ -44,11 +40,8 @@ class Solution {
                 }
             }
         }
-        
-        // for(auto i:paths) {
-        //     for(auto j:i) cout<<j<<' '; cout<<endl;
-        // }
-        
+
+        //If src and dest are on diff comps, return -1 else return the path
         if(paths[n].size()==0) return {-1};
         return paths[n];
     }
