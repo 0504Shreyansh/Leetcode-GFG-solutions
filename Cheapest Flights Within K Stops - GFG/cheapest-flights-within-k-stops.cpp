@@ -7,39 +7,18 @@ class Solution {
   public:
     int CheapestFLight(int n, vector<vector<int>>& flights, int src, int dst, int K)  {
         
-        //Create adjList
-        vector<pair<int,int>> adjList[n];
-        for (auto e : flights) 
-        {
-            int u = e[0], v = e[1], w = e[2];
-            adjList[u].push_back({v, w});
-        }
-        
         vector<int> dist(n, 1e9);
-        
-        queue<pair<int,pair<int,int>>> q;
-        q.push({0, {src, 0}});
         dist[src] = 0;
-        
-        while(q.size()) 
-        {
-            auto curr = q.front();
-            q.pop();
-            int stops = curr.first, node = curr.second.first, cost = curr.second.second;
-            //Valid answer
-            if(stops <= K) 
-            {
-                for (auto e : adjList[node]) 
-                {
-                    int v = e.first, w = e.second;
-                    if(dist[v] > cost + w)
-                    {
-                        dist[v] = cost + w;
-                        q.push({stops+1, {v, dist[v]}});
-                    }
+        K++;
+        while(K--) {
+            vector<int> curr = dist;
+            for (auto f : flights) {
+                int u = f[0], v = f[1], w = f[2];
+                if (w + dist[u] < curr[v]) {
+                    curr[v] = dist[u] + w;
                 }
-                
             }
+            dist = curr;
         }
         
         return dist[dst]==1e9 ? -1 : dist[dst];
