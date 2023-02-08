@@ -6,59 +6,48 @@ using namespace std;
 class Solution 
 {
     public:
-    //Function to find minimum time required to rot all oranges. 
-    void print(vector<vector<int>> &grid) {
-        for(auto i:grid) {
-            for(auto j:i) cout<<j<<' ';
-            cout<<endl;
-        }
-    }
-    void bfs(vector<vector<int>> &mat, queue<pair<int,int>> &q, int &time) {
-    int n = mat.size(), m = mat[0].size();
-    while(q.size()) {
-        int size = q.size();
-        bool f = false;
-        for(int i=0;i<size;i++) {
-            int x = q.front().first, y = q.front().second;
-            // cout<<x<<' '<<y<<endl;
-            q.pop();
-            if(x+1<n && mat[x+1][y]==1) {
-                f = true; q.push({x+1,y}); mat[x+1][y] = 2;
-            }
-            if(y+1<m && mat[x][y+1]==1) {
-                f = true; q.push({x,y+1}); mat[x][y+1] = 2;
-            }
-            if(x-1>=0 && mat[x-1][y]==1) {
-                f = true; q.push({x-1,y}); mat[x-1][y] = 2;
-            }
-            if(y-1>=0 && mat[x][y-1]==1) {
-                f = true; q.push({x,y-1}); mat[x][y-1] = 2; 
-            }
-        }
-        if(f) time++;
-        // print(mat);
-    }
-}
     int orangesRotting(vector<vector<int>>& grid) {
         
-        int ans = 0;
+        int t = 0, ones = 0;
+        int n = grid.size(), m = grid[0].size();
+        vector<vector<int>> visited(n, vector<int> (m, 0));
         queue<pair<int,int>> q;
         
-        for(int i=0;i<grid.size();i++) {
-            for(int j=0;j<grid[0].size();j++) {
-                if(grid[i][j]==2) 
-                    q.push({i,j});
-            } 
-        }
-        
-        bfs(grid,q,ans);
-        // print(grid);
-        for(auto i:grid) {
-            for(auto j:i) {
-                if(j==1) return -1;
+        for (int row = 0; row < n; row++) {
+            for (int col = 0; col < m; col++) {
+                if (grid[row][col]==2) {
+                    visited[row][col] = 1;
+                    q.push({row, col});
+                }
+                else if (grid[row][col])
+                    ones++;
             }
         }
-        return ans;
+        int dx[] = {-1,0,1,0}, dy[] = {0,-1,0,1};
+        
+        while (q.size()) {
+            int size = q.size();
+            int removedOnes = 0;
+            for (int i = 0; i < size; i++) {
+                auto curr = q.front();
+                q.pop();
+                int x = curr.first, y = curr.second;
+                for (int index = 0; index < 4; index++) {
+                    int new_row = x + dx[index], new_col = y + dy[index];
+                    if(new_row>=0 && new_row<n && new_col>=0 && new_col<m && !visited[new_row][new_col] && grid[new_row][new_col]) {
+                        visited[new_row][new_col] = 1;
+                        q.push({new_row, new_col});
+                        removedOnes++;
+                    }
+                }
+            }
+            if (removedOnes) {
+                ones -= removedOnes;
+                t++;
+            }
+        }
+        
+        return (ones==0) ? t : -1;
         
     }
 };
