@@ -8,9 +8,8 @@ public:
         if(visited[0])
             return -1;
         visited[0] = 1;
-        queue<string> q;
-        q.push("0000");
         
+        queue<string> q({"0000"});
         int steps = 0;
         
         while(q.size()) 
@@ -26,32 +25,22 @@ public:
                 for(int k = 0; k < 4; k++)
                 {
                     char org = cur[k];
-                    if(org=='0')
-                    {
-                        cur[k] = '9';
-                        if(!visited[stoi(cur)]) {q.push(cur); visited[stoi(cur)]++;}
-                        cur[k] = '1';
-                        if(!visited[stoi(cur)]) {q.push(cur); visited[stoi(cur)]++;}
+                    //Change to the next by handling char = '9'
+                    cur[k] = (org == '9') ? '0' : org + 1;
+                    if(!visited[stoi(cur)]) {
+                        q.push(cur);
+                        visited[stoi(cur)] = 1;
                     }
-                    else if(org=='9') 
-                    {
-                        cur[k] = '0';
-                        if(!visited[stoi(cur)]) {q.push(cur); visited[stoi(cur)]++;}
-                        cur[k] = '8';
-                        if(!visited[stoi(cur)]) {q.push(cur); visited[stoi(cur)]++;}
-                    }
-                    else
-                    {
-                        cur[k] = org - 1;
-                        if(!visited[stoi(cur)]) {q.push(cur); visited[stoi(cur)]++;}
-                        cur[k] = org + 1;
-                        if(!visited[stoi(cur)]) {q.push(cur); visited[stoi(cur)]++;}
+                    //Change to the prev by handling char = '0'
+                    cur[k] = (org == '0') ? '9' : org - 1;
+                    if(!visited[stoi(cur)]) {
+                        q.push(cur);
+                        visited[stoi(cur)] = 1;
                     }
                     cur[k] = org;
                 }
             }
             steps++;
-            // cout<<endl;
         }        
         return -1;
     }
