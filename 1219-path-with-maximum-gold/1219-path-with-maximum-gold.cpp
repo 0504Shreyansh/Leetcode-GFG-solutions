@@ -2,27 +2,24 @@ class Solution {
 public:
     int ans = 0;
     vector<pair<int,int>> dir = {{-1,0},{1,0},{0,1},{0,-1}};
-    void dfs(int i, int j, vector<vector<int>>& grid, vector<vector<int>>& vis, int sum) {
-        vis[i][j] = 1;
-        sum += grid[i][j];
+    void dfs(int i, int j, vector<vector<int>>& grid, int sum) {
+        int prev = grid[i][j], n = grid.size(), m = grid[0].size();
+        sum += prev;
+        grid[i][j] = -1;
         ans = max(ans, sum);
-        for(auto x : dir) {
-            int newX = i + x.first, newY = j + x.second;
-            if(newX>=0 && newX<grid.size() && newY>=0 && newY<grid[0].size() && !vis[newX][newY] && grid[newX][newY]) 
-                dfs(newX, newY, grid, vis, sum);
+        for(auto [x, y] : dir) {
+            int newX = i + x, newY = j + y;
+            if(newX>=0 && newX<n && newY>=0 && newY<m && grid[newX][newY]!=-1 && grid[newX][newY]) 
+                dfs(newX, newY, grid, sum);
         }
-        vis[i][j] = 0;
+        grid[i][j] = prev;
     }
     int getMaximumGold(vector<vector<int>>& grid) {
         int n = grid.size(), m = grid[0].size();
-        for(int i = 0; i < n; i++) {
-            for(int j = 0; j < m; j++) {
-                if(grid[i][j]) {
-                    vector<vector<int>> vis(n, vector<int> (m));
-                    dfs(i, j, grid, vis, 0);
-                } 
-            } 
-        }
+        for(int i = 0; i < n; i++) 
+            for(int j = 0; j < m; j++) 
+                dfs(i, j, grid, 0); 
+            
         return ans;
     }
 };
