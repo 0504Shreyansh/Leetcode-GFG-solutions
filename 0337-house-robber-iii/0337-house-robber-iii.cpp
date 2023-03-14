@@ -23,15 +23,17 @@ public:
         pair<int,int> l = getSum(root->left);
         pair<int,int> r = getSum(root->right);
         pair<int,int> ans;
-        // cout<<l.first<<' '<<l.second<<"  "<<r.first<<' '<<r.second<<endl;
+        
+        // Kind of swap at ans.first
         ans.first = root->val + l.second + r.second;
+        // At ans.second, store the maximum of both left and right
         ans.second = max(l.first,l.second) + max(r.first,r.second);
-        // cout<<ans.first<<' '<<ans.second<<endl;
+        
         return ans;
     }
     int rob(TreeNode* root) {
         pair<int,int> ans = getSum(root);
-        // cout<<ans.first<<' '<<ans.second<<endl<<endl;
-        return max(ans.first,ans.second);
+        int res = max(ans.first,ans.second);
+        return res;
     }
 };
