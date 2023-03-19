@@ -1,25 +1,25 @@
 class WordDictionary {
 public:
-    unordered_map<int,vector<string>> mp;
+    vector<vector<string>> store;
     WordDictionary() {
-        
+        store.resize(26);
     }
     
     void addWord(string word) {
-        mp[word.size()].push_back(word);
+        store[word.size()].push_back(word);
     }
     
     bool search(string word) {
         int n = word.size();
-        for(auto &i : mp[word.size()]) {
-            bool f = true;
-            for(int j=0;j<n;j++) {
-                if(word[j]=='.') continue;
-                if(word[j]!=i[j]) {
-                    f = false; break;
+        for (int i = 0; i < store[n].size(); i++) {
+            int diff = 0;
+            for (int j = 0; j < n; j++) {
+                if (word[j] == '.') continue;
+                if (word[j] != store[n][i][j]) {
+                    diff = 1; break;
                 }
             }
-            if(f) return true;
+            if (diff==0) return true;
         }
         return false;
     }
