@@ -22,9 +22,13 @@
 class Solution {
 public:
     bool check(TreeNode* root, ListNode* head) {
+        // If head first becomes NULL -> all the LL is present
         if (head == NULL) return true;
+        // Tree has ended (not found 404)
         if (root == NULL) return false;
+        // Not present
         if (root->val != head->val) return false;
+        // Check in both the directions whether LL is present or not
         return (check(root->left, head->next) || check(root->right, head->next));
     }
     bool isSubPath(ListNode* head, TreeNode* root) {
