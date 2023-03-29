@@ -2,19 +2,17 @@ class Solution {
 public:
     int maxSatisfaction(vector<int>& satisfaction) {
         
-        int n = satisfaction.size();
+        int res = 0;
+        int N = satisfaction.size();
         sort(satisfaction.rbegin(),satisfaction.rend());
-        int ans = 0;
-        for(int i=0;i<satisfaction.size();i++) {
-            int curr = 0, k = satisfaction.size();
-            for(int j=0;j<satisfaction.size();j++) {
-                curr += k*(satisfaction[j]);
-                k--;
-            }
-            ans = max(ans,curr);
-            satisfaction.pop_back();
+        for(int i = 0; i < N; i++) {
+            int cur = 0, k = i+1;
+            for(int j = 0; j <= i; j++) {
+                cur += (k--)*satisfaction[j];
+            } 
+            res = max(res, cur);
         }
+        return res;
         
-        return ans;
     }
 };
