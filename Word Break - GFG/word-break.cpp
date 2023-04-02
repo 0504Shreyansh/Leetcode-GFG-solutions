@@ -17,19 +17,12 @@ public:
     unordered_map<string,int> mp;
     bool solve(int i, string A, string cur) {
         if(i >= A.size()) {
-            if(cur.size()==0)
-            return true;
-            else
-            return false;
+            return (cur.size()==0) ? true : false;
         }
             
         bool notConsider = solve(i+1, A, cur+A[i]);
-        bool consider = false;
-        cur += A[i];
-        if(mp[cur]) {
-            consider = solve(i+1, A, "");
-        }
-        
+        bool consider = (mp[cur+A[i]]) ? consider = solve(i+1, A, "") : false;
+
         return (consider || notConsider);
     }
     int wordBreak(string A, vector<string> &B) {
