@@ -47,16 +47,16 @@ class Solution {
     //     return dp[i][prevSelected] = (A[i] + solveIt(i + 1, A, false, dp));
     // }
     long long findMaxSubsetSum(int N, vector<int> &A) {
-        int next[2] = {0};
-        int prev[2];
+        int falseNext = 0, trueNext = 0;
+        int falsePrev, truePrev;
         for(int i = N - 1; i >= 0; i--) {
-            prev[0] = max(next[1], A[i] + next[0]);
-            prev[1] = A[i] + next[0];
-            next[0] = prev[0];
-            next[1] = prev[1];
+            falsePrev = max(trueNext, A[i] + falseNext);
+            truePrev = A[i] + falseNext;
+            falseNext = falsePrev;
+            trueNext = truePrev;
         }
         
-        return prev[0];
+        return falsePrev;
     }
 };
 
