@@ -31,24 +31,32 @@ public:
 class Solution {
 
   public:
-    long long solveIt(int i, vector<int>& A, bool prevSelected, vector<vector<int>>& dp) {
-        if(i == A.size()) {
-            return 0;
-        }
+    // long long solveIt(int i, vector<int>& A, bool prevSelected, vector<vector<int>>& dp) {
+    //     if(i == A.size()) {
+    //         return 0;
+    //     }
     
-        if(dp[i][prevSelected] != -1) {
-            return dp[i][prevSelected];
-        }
+    //     if(dp[i][prevSelected] != -1) {
+    //         return dp[i][prevSelected];
+    //     }
     
-        if(prevSelected == false) {
-            return dp[i][prevSelected] = max(solveIt(i + 1, A, true, dp), A[i] + solveIt(i + 1, A, false, dp));
-        }
+    //     if(prevSelected == false) {
+    //         return dp[i][prevSelected] = max(solveIt(i + 1, A, true, dp), A[i] + solveIt(i + 1, A, false, dp));
+    //     }
     
-        return dp[i][prevSelected] = (A[i] + solveIt(i + 1, A, false, dp));
-    }
+    //     return dp[i][prevSelected] = (A[i] + solveIt(i + 1, A, false, dp));
+    // }
     long long findMaxSubsetSum(int N, vector<int> &A) {
-        vector<vector<int>> dp(N + 1, vector<int> (2, -1));
-        return solveIt(0, A, false, dp);
+        int next[2] = {0};
+        int prev[2];
+        for(int i = N - 1; i >= 0; i--) {
+            prev[0] = max(next[1], A[i] + next[0]);
+            prev[1] = A[i] + next[0];
+            next[0] = prev[0];
+            next[1] = prev[1];
+        }
+        
+        return prev[0];
     }
 };
 
