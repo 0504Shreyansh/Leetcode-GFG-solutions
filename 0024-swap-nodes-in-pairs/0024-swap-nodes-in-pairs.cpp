@@ -10,34 +10,22 @@
  */
 class Solution {
 public:
-    ListNode* recursiveSwapPairs(ListNode* head) {
-        if(!head || !head->next)
-            return head;
-        ListNode* n = head->next;
-        head->next = recursiveSwapPairs(n->next);
-        n->next = head;
-        return n;
-    }
     ListNode* swapPairs(ListNode* head) {
         
-        // return recursiveSwapPairs(head);
-        
-        if(!head || !(head->next)) 
+        if(!head || !head->next)
             return head;
-        
-        ListNode *curr = head, *prev = NULL;
-        ListNode* ans = head->next;
-        
+            
+        ListNode *temp = new ListNode(-1);
+        ListNode *prev = temp;
+        ListNode *curr = head;
         while(curr && curr->next) {
-            ListNode* temp = curr->next;
-            curr->next = temp->next;
-            temp->next = curr;
-            if(prev)
-                prev->next = temp;
-            prev = curr;
-            curr = curr->next;
+            prev -> next = curr -> next;  //similar to swapping
+            curr -> next = prev -> next -> next;
+            prev -> next -> next = curr;
+            
+            prev = curr;     //further traversal
+            curr = curr -> next;
         }
-        
-        return ans;
+        return temp -> next;
     }
 };
