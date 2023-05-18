@@ -8,44 +8,39 @@ using namespace std;
 //User function Template for C++
 
 class Solution {
-    private:
-    void dfs(vector<vector<int>> &grid, vector<vector<int>>&visited, int i, int j) {
-        if(i<0||i>=grid.size()||j<0||j>=grid[0].size()||visited[i][j]||!grid[i][j])
-            return ;
-        visited[i][j] = 1;
-        dfs(grid,visited,i+1,j);
-        dfs(grid,visited,i-1,j);
-        dfs(grid,visited,i,j+1);
-        dfs(grid,visited,i,j-1);
-    }
     public:
-    int closedIslands(vector<vector<int>>& matrix, int n, int m) 
-    {
-        vector<vector<int>> visited(n, vector<int> (m));
+    vector<pair<int,int>> direction = {{-1, 0}, {1, 0}, {0, 1}, {0, -1}}; 
+    void dfs(int i, int j, vector<vector<int>>& grid, vector<vector<int>>& vis) {
+        vis[i][j] = 1;
+        for(auto v : direction) {
+            int newX = i + v.first;
+            int newY = j + v.second;
+            if(newX >= 0&& newX < grid.size() && newY >= 0 && newY < grid[0].size() && !vis[newX][newY] && grid[newX][newY] == 1) {
+                dfs(newX, newY, grid, vis);
+            } 
+        }
+    }
+    int closedIslands(vector<vector<int>>& grid, int N, int M) {
+        vector<vector<int>> vis(N, vector<int> (M));
+        for(int i = 0; i < N; i++) {
+            if(grid[i][0] == 1 && !vis[i][0]) dfs(i, 0, grid, vis);
+            if(grid[i][M - 1] == 1 && !vis[i][M - 1]) dfs(i, M - 1, grid, vis);
+        }
+        for(int j = 0; j < M; j++) {
+            if(grid[0][j] == 1 && !vis[0][j]) dfs(0, j, grid, vis);
+            if(grid[N - 1][j] == 1 && !vis[N - 1][j]) dfs(N - 1, j, grid, vis);
+        }
         
-        for(int i=0;i<n;i++) {
-            if(!visited[i][0] && matrix[i][0]) 
-                dfs(matrix,visited,i,0);
-            if(!visited[i][m-1] && matrix[i][m-1]) 
-                dfs(matrix,visited,i,m-1);
-        }
-        for(int i=0;i<m;i++) {
-            if(!visited[0][i] && matrix[0][i]) 
-                dfs(matrix,visited,0,i);
-            if(!visited[n-1][i] && matrix[n-1][i]) 
-                dfs(matrix,visited,n-1,i);
-        }
-        int ans = 0;
-        for(int i=0;i<n;i++) {
-            for(int j=0;j<m;j++) {
-                if(!visited[i][j] && matrix[i][j]) {
-                    ans++;
-                    dfs(matrix,visited,i,j);
+        int closedIslandsCount = 0;
+        for(int i = 0; i < N; i++) {
+            for(int j = 0; j < M; j++) {
+                if(grid[i][j] == 1 && !vis[i][j]) {
+                    closedIslandsCount++;
+                    dfs(i, j, grid, vis);
                 }
             }
         }
-        return ans;
-        
+        return closedIslandsCount;
     }
 };
 
