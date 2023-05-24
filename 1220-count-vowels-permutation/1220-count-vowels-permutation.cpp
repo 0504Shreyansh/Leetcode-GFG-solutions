@@ -2,21 +2,22 @@
 class Solution {
 public:
     int countVowelPermutation(int n) {
-        vector<vector<int>> dp(n + 1, vector<int> (5, -1));
+        vector<int> cur(5, -1), prev(5, -1);;
         for(int i = 0; i < 5; i++) {
-            dp[1][i] = 1;
+            prev[i] = 1;
         }
         for(int i = 2; i <= n; i++) {
-            dp[i][0] = (dp[i - 1][1]) % mod;  //a
-            dp[i][1] = (dp[i - 1][0] + dp[i - 1][2]) % mod;  //e
-            dp[i][2] = ((((dp[i - 1][0] + dp[i - 1][1]) % mod) + dp[i - 1][3]) % mod + dp[i - 1][4]) % mod;   //i
-            dp[i][3] = (dp[i - 1][2] + dp[i - 1][4]) % mod;  //o
-            dp[i][4] = (dp[i - 1][0]) % mod;  //u
+            cur[0] = (prev[1]) % mod;  //a
+            cur[1] = (prev[0] + prev[2]) % mod;  //e
+            cur[2] = ((((prev[0] + prev[1]) % mod) + prev[3]) % mod + prev[4]) % mod;   //i
+            cur[3] = (prev[2] + prev[4]) % mod;  //o
+            cur[4] = (prev[0]) % mod;  //u
+            prev = cur;
         }
         int ans = 0;
         // count all vowels
         for(int i = 0; i < 5; i++) 
-            ans = (ans + dp[n][i]) % mod;
+            ans = (ans + prev[i]) % mod;
         return ans;
     }
 };
