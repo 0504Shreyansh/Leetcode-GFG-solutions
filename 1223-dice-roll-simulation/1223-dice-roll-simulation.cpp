@@ -23,7 +23,37 @@ public:
     }
     int dieSimulator(int n, vector<int>& rollMax) {
         vector<vector<vector<int>>> dp(n + 1, 
-                vector<vector<int>> (7, vector<int> (16, -1)));
-        return solve(n, 0, 0, rollMax, dp);
+                vector<vector<int>> (7, vector<int> (17, -1)));
+        // return solve(n, 0, 0, rollMax, dp);
+        
+        
+        
+        for(int prev = 0; prev <= 6; prev++) {
+            for(int times = 0; times <= 15; times++) {
+                dp[0][prev][times] = 1;
+            }
+        }
+        
+        
+        for(int i = 1; i <= n; i++) {
+            for(int prev = 0; prev <= 6; prev++) {
+                for(int times = 15; times >= 0; times--) {
+                    int curr = 0;
+                    for(int roll = 1; roll <= 6; roll++) {
+                        if(roll != prev) { 
+                            curr = (curr + dp[i - 1][roll][1]) % mod;
+                        }
+                        else {
+                            if(times != rollMax[roll - 1]) { 
+                                curr = (curr + dp[i - 1][prev][times + 1]) % mod;
+                            }
+                        }
+                    }
+                    dp[i][prev][times] = curr;
+                }
+            }
+        }
+        
+        return dp[n][0][0];
     }
 };
