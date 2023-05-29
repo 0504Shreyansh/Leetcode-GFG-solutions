@@ -1,37 +1,14 @@
 class ParkingSystem {
 public:
-    int _big;
-    int _medium;
-    int _small;
+    int parking[4];
     ParkingSystem(int big, int medium, int small) {
-        _big = big;
-        _medium = medium;
-        _small = small;
+        parking[1] = big;
+        parking[2] = medium;
+        parking[3] = small;
     }
     
     bool addCar(int carType) {
-        if(carType == 1) {
-            if(_big > 0) {
-                _big--;
-                return true;
-            }
-            return false;
-        }
-        else if(carType == 2) {
-            if(_medium > 0) {
-                _medium--;
-                return true;
-            }
-            return false;
-        }
-        else {
-            if(_small > 0) {
-                _small--;
-                return true;
-            }
-            return false;
-        }
-        return true;
+        return parking[carType]-- > 0 ? true : false;
     }
 };
 
