@@ -6,30 +6,32 @@ using namespace std;
 
 struct TrieNode {
     TrieNode *childNode[26];
-    bool isEnd = false;
+    bool end = 0;
     bool containsKey(char ch) {
         return childNode[ch - 'A'] != NULL;
     }
-    void put(char ch, TrieNode* root) {
+    void put(char ch, TrieNode *root) {
         childNode[ch - 'A'] = root;
     }
-    TrieNode *get(char ch) {
+    TrieNode* get(char ch) {
         return childNode[ch - 'A'];
     }
     void setEnd() {
-        isEnd = true;
+        end = true;
     }
     bool getEnd() {
-        return isEnd;
+        return end;
     }
 };
 
 class Trie {
-    TrieNode *root;
-    public:  
+    private:
+    TrieNode* root;
+    public:
     Trie() {
         root = new TrieNode();
     }
+    // Inserts a key
     bool insert_key(string word, string pattern) {
         TrieNode *node = root;
         int j = 0, m = pattern.size();
@@ -40,14 +42,12 @@ class Trie {
                     node->put(word[i], node);
                 }
                 if(j < m && word[i] == pattern[j]) j++;
-                else if(j == m && f != false) f = true;
-                else f = false;
+                else if(j == m && f != false) return true;
+                else return false;
                 node = node -> get(word[i]);
             }
         }
-        node -> setEnd();
-        if(!f) return false;
-        return (j == m);
+        return (j == m && f);
     }
 };
 
@@ -56,11 +56,10 @@ class Solution {
     vector<string> CamelCase(int N, vector<string> Dictionary, string Pattern) {
         vector<string> ans;
         Trie *root = new Trie();
-        for(auto s : Dictionary) {
-            if (root -> insert_key(s, Pattern)) {
-                ans.push_back(s);
-            }
-        }
+        for(auto it : Dictionary)
+            if(root -> insert_key(it, Pattern))
+                ans.push_back(it);
+        if(ans.empty()) ans.push_back("-1");
         return ans;
     }
 };
