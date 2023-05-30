@@ -1,79 +1,38 @@
 class Solution {
 public:
-//     void call(int i, int j, int cnt, vector<pair<int,int>> &allPaths, vector<vector<bool>> &vis, int k, int l, vector<vector<int>> grid, int m, int n, int size) {
-        
-//         if(i==k&&j==l) {
-//             cout<<"PAHUNCH : "<<size<<' '<<m*n-cnt<<endl;
-//             if(size==m*n-cnt) {
-//                 cout<<"ASLI : "<<i<<' '<<j<<endl;
-//                 ans++;
-//             }
-//             return;
-//         }
-//         vis[i][j] = true;
-//         allPaths.push_back({i,j});
-//         size++;
-//         // cout<<"UP : "<<i<<' '<<j<<endl;
-//         if(i-1>=0 && i-1<n && j>=0 && j<m && !vis[i-1][j]) {
-//             // vis[i-1][j] = true;
-//             // allPaths.push_back({i-1,j});
-//             cout<<"UP : "<<i<<' '<<j<<' '<<size<<endl;
-//             call(i-1,j,cnt,allPaths,vis,k,l,grid,m,n,size);
-//         }
-//         if(i+1>=0 && i+1<n && j>=0 && j<m && !vis[i+1][j]) {
-//             // vis[i+1][j] = true;
-//             // allPaths.push_back({i+1,j});
-//             cout<<"DOWN : "<<i<<' '<<j<<' '<<size<<endl;
-//             call(i+1,j,cnt,allPaths,vis,k,l,grid,m,n,size);
-//         }
-//         if(i>=0 && i<n && j-1>=0 && j-1<m && !vis[i][j-1]) {
-//             // vis[i][j-1] = true;
-//             // allPaths.push_back({i,j-1});
-//             cout<<"LEFT : "<<i<<' '<<j<<' '<<size<<endl;
-//             call(i,j-1,cnt,allPaths,vis,k,l,grid,m,n,size);
-//         }
-//         if(i>=0 && i<n && j+1>=0 && j+1<m && !vis[i][j+1]) {
-//             // vis[i][j+1] = true;
-//             // allPaths.push_back({i,j+1});
-//             cout<<"RIGHT : "<<i<<' '<<j<<' '<<size<<endl;
-//             call(i,j+1,cnt,allPaths,vis,k,l,grid,m,n,size);
-//         }
-//         // vis[i][j] = false;
-//         // return;
-//     }
-    int call(vector<vector<int>> grid, int i, int j, int size, int cnt, int n, int m) {
-        
-        if(i<0 || j<0 || i>=n || j>=m || grid[i][j]==-1)
-            return 0;
-        
-        if(grid[i][j]==2) {
-            if(size+1==cnt)
-                return 1;
-            return 0;
+    vector<pair<int,int>> direction = {{-1, 0}, {1, 0}, {0, 1}, {0, -1}};
+    int dfs(int i, int j, vector<vector<int>>& grid, int cnt) {
+        int n = grid.size();
+        int m = grid[0].size();
+        if(grid[i][j] == 2) {
+            return (cnt == n * m - 1) ? 1 : 0;
         }
-        
+        int ans = 0;
         grid[i][j] = -1;
-        int curr = call(grid,i-1,j,size+1,cnt,n,m)+call(grid,i+1,j,size+1,cnt,n,m)+call(grid,i,j-1,size+1,cnt,n,m)+call(grid,i,j+1,size+1,cnt,n,m);
+        for(auto [dx, dy] : direction) {
+            int X = i + dx;
+            int Y = j + dy;
+            if(X >= 0 && X < n && Y >= 0 && Y < m && grid[X][Y] != -1) {
+                ans += dfs(X, Y, grid, cnt + 1);
+            }
+        } 
         grid[i][j] = 0;
-        
-        return curr;
+        return ans;
     }
     int uniquePathsIII(vector<vector<int>>& grid) {
-        
-        int n = grid.size(), m = grid[0].size();
-        int kk = -1, ll = -1, cnt = 0, size = 0;
-        
-        for(int i=0;i<n;i++) {
-            for(int j=0;j<m;j++) {
-                if(grid[i][j]!=-1) 
+        int sr, sc;
+        int cnt = 0;
+        for(int i = 0; i < grid.size(); i++) {
+            for(int j = 0; j < grid[0].size(); j++) {
+                if(grid[i][j] == 1) {
+                    sr = i, sc = j;
+                }
+                else if(grid[i][j] == -1) {
                     cnt++;
-                
-                if(grid[i][j]==1) 
-                    kk = i, ll = j;
+                }
             }
         }
         
-        // call(i,j,cnt,allPaths,vis,k,l,grid,m,n,size);
-        return call(grid,kk,ll,size,cnt,n,m);
+        return dfs(sr, sc, grid, cnt);
     }
 };
