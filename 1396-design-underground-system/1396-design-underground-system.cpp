@@ -1,28 +1,36 @@
 class UndergroundSystem {
-    private:
-        unordered_map<int,pair<string,int>> checkin; 
-        unordered_map<string,pair<double,int>> checkout; 
-    public:
-        UndergroundSystem() {
-
+public:
+    unordered_map<int,pair<string,int>> checkin;
+    unordered_map<string,pair<double,int>> timings;
+    UndergroundSystem() {
+        
+    }
+    
+    void checkIn(int id, string stationName, int t) {
+        checkin[id] = {stationName, t};
+    }
+    
+    void checkOut(int id, string stationName, int t) {
+        string startStation = checkin[id].first;
+        int startTime = checkin[id].second;
+        checkin.erase(id);
+        // first time store
+        if(timings.find(startStation + '+' + stationName) == timings.end()) {
+            timings[startStation + '+' + stationName] = {t - startTime, 1};
         }
-        void checkIn(int id, string stationName, int t) {
-            checkin[id] = {stationName,t};
+        // update the already calculated time
+        else {
+            auto cur = timings[startStation + '+' + stationName];
+            double calTime = cur.first;
+            int cnt = cur.second;
+            calTime = (calTime * cnt + (t - startTime)) / (cnt + 1);
+            timings[startStation + '+' + stationName] = {calTime, cnt + 1};
         }
-        void checkOut(int id, string stationName, int t) {
-            //New string(Source-Destination)
-            string dest = checkin[id].first + '-' + stationName;
-            //Total time storage
-            checkout[dest].first += t - checkin[id].second;
-            //Coutn storage
-            checkout[dest].second++;
-            checkin.erase(id);
-        }
-        double getAverageTime(string startStation, string endStation) {
-            //Source-Destination
-            string sourceToDestination = (startStation+'-'+endStation);
-            return (checkout[sourceToDestination].first)/(checkout[sourceToDestination].second);
-        }
+    }
+    
+    double getAverageTime(string startStation, string endStation) {
+        return timings[startStation + '+' + endStation].first;
+    }
 };
 
 /**
