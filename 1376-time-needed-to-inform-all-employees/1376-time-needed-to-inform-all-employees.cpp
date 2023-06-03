@@ -1,41 +1,30 @@
 class Solution {
 public:
     int numOfMinutes(int n, int headID, vector<int>& manager, vector<int>& informTime) {
-        
-        vector<pair<int,int>> adjList[n];
-        queue<pair<int,int>> q({{headID, -1}});
-        vector<int> dist(n, 1e9);
-        dist[headID] = informTime[headID];
-        
+        vector<pair<int,int>> adj[n];
         for(int i = 0; i < n; i++) {
-            if(manager[i]!=-1) 
-                adjList[manager[i]].push_back({i, informTime[i]});             
+            if(manager[i] != -1) 
+                adj[manager[i]].push_back({i, informTime[i]});             
         }
-        
-        // for(int i = 0; i < n; i++) {
-        //     cout<<i<<"->";
-        //     for(auto j:adjList[i]) 
-        //         cout<<j.first<<" "<<j.second<<", ";
-        //     cout<<endl;
-        // }
-        
-        while(q.size()) {
-            int sz = q.size();
-            for(int i = 0; i < sz; i++) {
-                auto cur = q.front();
-                q.pop();
-                int node = cur.first, parent = cur.second;
-                for(auto adjNode: adjList[node]) {
-                // Dijkstra algo 
-                    if(dist[adjNode.first] > dist[node] + adjNode.second) {
-                        dist[adjNode.first] = dist[node] + adjNode.second;
-                        q.push({adjNode.first, node});
+        queue<int> Q;
+        Q.push(headID);  
+        vector<int> time(n, 1e9);
+        time[headID] = informTime[headID];
+        while(Q.size()) {
+            int size = Q.size();
+            while(size--) {
+                int emp = Q.front();
+                Q.pop();
+                for(auto e : adj[emp]) {
+                    int nbrEmp = e.first;
+                    int neededTime = e.second;
+                    if(time[nbrEmp] > time[emp] + neededTime) {
+                        time[nbrEmp] = time[emp] + neededTime;
+                        Q.push(nbrEmp);
                     }
                 }
             }
         }
-        
-        for(auto i:dist) cout<<i<<' '; cout<<endl;
-        return *max_element(dist.begin(), dist.end());
+        return *max_element(begin(time),end(time));
     }
 };
