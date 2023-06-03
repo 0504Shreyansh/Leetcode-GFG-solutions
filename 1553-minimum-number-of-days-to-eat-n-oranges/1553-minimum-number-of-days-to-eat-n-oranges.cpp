@@ -1,22 +1,33 @@
 class Solution {
 public:
-    unordered_map<int,int> dp;
-    int getMinDays(int n) {
-        // Base case
-        if(n <= 1) {
-            return 1;
-        }
-        
-        if(dp.find(n) != dp.end()) {
-            return dp[n];
-        }
-            
-        int divideBy2 = (n % 2) + getMinDays(n / 2);
-        int divideBy3 = (n % 3) + getMinDays(n / 3);
-        
-        return dp[n] = min({divideBy2, divideBy3}) + 1;
-    }
     int minDays(int n) {
-        return getMinDays(n);   // + try bfs approach
+        int ans = 0;
+        set<int> vis;
+        queue<int> Q;
+        Q.push(n);
+        while(!Q.empty()) {
+            int size = Q.size();
+            while(size--) {                
+                int num = Q.front();
+                Q.pop();
+                if(num <= 0) {
+                    return ans;
+                } 
+                if(!vis.count(num - 1)) {
+                    vis.insert(num - 1);
+                    Q.push(num - 1);
+                }
+                if(num % 2 == 0 && !vis.count(num / 2)) {
+                    vis.insert(num / 2);
+                    Q.push(num / 2);
+                }
+                if(num % 3 == 0 && !vis.count(num / 3)) {
+                    vis.insert(num / 3);
+                    Q.push(num / 3);
+                }
+            }
+            ans++;
+        }
+        return -1;
     }
 };
