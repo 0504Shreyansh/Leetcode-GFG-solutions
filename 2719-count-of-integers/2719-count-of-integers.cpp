@@ -5,21 +5,20 @@ public:
     ll build(string &s, int curIndex, int n, int sum, bool tight, vector<vector<vector<ll>>> &dp)
     {
         // Base case
-        // if(sum == 0) return 1ll;
         if (n == 0) {
             return (sum == 0) ?1ll : 0;
-            // return 0;
         }
 
         if (dp[n][sum][tight] != -1) {
             return dp[n][sum][tight] % mod;
         }
-
+        
         ll answer = 0;
-
-        if (tight) {
-            for (char ch = '0'; ch <= s[curIndex]; ch++) {
-                if (ch == s[curIndex]) {
+        
+        char upperLimit = (tight) ? s[curIndex] : '9';
+        // if (tight) {
+            for (char ch = '0'; ch <= upperLimit; ch++) {
+                if (ch == s[curIndex] && tight) {
                     if (sum >= (ch - '0')) { // more tight conditions
                         answer = (answer + build(s, curIndex + 1, n - 1, sum - (ch - '0'), tight, dp)) % mod;
                     }
@@ -30,15 +29,14 @@ public:
                     }
                 }
             }
-        }
-        else {
-            for (char ch = '0'; ch <= '9'; ch++) {
-                if (sum >= (ch - '0')) { // build freely
-                    answer = (answer + build(s, curIndex + 1, n - 1, sum - (ch - '0'), false, dp)) % mod;
-                }
-            }
-        }
-
+        // }
+        // else {
+        //     for (char ch = '0'; ch <= '9'; ch++) {
+        //         if (sum >= (ch - '0')) { // build freely
+        //             answer = (answer + build(s, curIndex + 1, n - 1, sum - (ch - '0'), false, dp)) % mod;
+        //         }
+        //     }
+        // }
         return dp[n][sum][tight] = answer % mod;
     }
 
