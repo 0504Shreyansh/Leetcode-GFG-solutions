@@ -33,23 +33,23 @@ public:
     vector<bool> friendRequests(int n, vector<vector<int>>& restrictions, vector<vector<int>>& requests) {
         DisjointSet dsu(n);
         vector<bool> ans;
-        for(int i = 0; i < requests.size(); i++) {
-            int parent1 = dsu.findParent(requests[i][0]);
-            int parent2 = dsu.findParent(requests[i][1]);
+        for(auto req : requests) {
+            int parent1 = dsu.findParent(req[0]);
+            int parent2 = dsu.findParent(req[1]);
             // Check if the request are restricted or not.
             bool canBeFriends = true;
-            for(int j = 0; j < restrictions.size(); j++) {
-                int parentRes1 = dsu.findParent(restrictions[j][0]);
-                int parentRes2 = dsu.findParent(restrictions[j][1]);
+            for(auto res : restrictions) {
+                int parentRestricted1 = dsu.findParent(res[0]);
+                int parentRestricted2 = dsu.findParent(res[1]);
                 // Found restricted
-                if((parent1 == parentRes1 && parent2 == parentRes2) || (parent1 == parentRes2 && parent2 == parentRes1)) {
+                if((parent1 == parentRestricted1 && parent2 == parentRestricted2) || (parent1 == parentRestricted2 && parent2 == parentRestricted1)) {
                     canBeFriends = false;
                     break;
                 }
             }
             // They can now be friends
             if(canBeFriends) {
-                dsu.unite(requests[i][0], requests[i][1]);
+                dsu.unite(req[0], req[1]);
                 ans.push_back(true);
             }
             else {
