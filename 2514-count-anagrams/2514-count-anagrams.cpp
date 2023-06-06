@@ -24,19 +24,16 @@ public:
         pre_compute();
         stringstream ss(s);
         int ans = 1;
-        vector<string> words;
         while(ss >> s) {    // take out all the words
-            words.push_back(s);
-        }
-        for(auto &word : words) {
             unordered_map<char,int> freq;
-            for(auto &it : word)
+            for(auto &it : s)
                 freq[it]++;
-            ll curr = fact[word.size()];
+            ll curr = fact[s.size()];
             for(auto &it : freq) {
                 curr = (curr * binpow(fact[it.second], mod - 2)) % mod;
             }
             ans = (ans * curr) % mod;
+            
         }
         return ans;
     }
