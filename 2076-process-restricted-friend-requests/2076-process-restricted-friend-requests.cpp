@@ -33,12 +33,12 @@ public:
     vector<bool> friendRequests(int n, vector<vector<int>>& restrictions, vector<vector<int>>& requests) {
         DisjointSet dsu(n);
         vector<bool> ans;
-        for(auto req : requests) {
+        for(auto &req : requests) {
             int parent1 = dsu.findParent(req[0]);
             int parent2 = dsu.findParent(req[1]);
             // Check if the request are restricted or not.
             bool canBeFriends = true;
-            for(auto res : restrictions) {
+            for(auto &res : restrictions) {
                 int parentRestricted1 = dsu.findParent(res[0]);
                 int parentRestricted2 = dsu.findParent(res[1]);
                 // Found restricted
