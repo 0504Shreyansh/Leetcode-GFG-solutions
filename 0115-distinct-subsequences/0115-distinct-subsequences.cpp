@@ -3,11 +3,7 @@ public:
     int numDistinct(string s, string t) {
         int n = s.size();
         int m = t.size();
-        vector<unsigned long long> prev(m + 1, 0);
         vector<unsigned long long> dp(m + 1, 0);
-        
-        // Base case
-        // prev[0] = 1;
         
         for(int i = 1; i <= n; i++) {
             dp[0] = 1;
