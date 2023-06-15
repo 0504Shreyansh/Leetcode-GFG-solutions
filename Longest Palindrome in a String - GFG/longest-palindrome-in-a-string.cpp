@@ -6,42 +6,35 @@ using namespace std;
 // } Driver Code Ends
 class Solution {
   public:
-    string check1(string s, int i) {
-        int x = i, y = i;
-        while(x-1>=0 && y+1<s.size() && s[x-1]==s[y+1]) {
-            x--, y++;
+    string longestPalin(string s) {
+        int n = s.size();
+        int start = -1;
+        int len = 0;
+        for(int i = 0 ; i < n; i++) {
+            int odd_start = i, odd_end = i;
+            int oddLength = 1;
+            while(odd_start - 1 >= 0 && odd_end + 1 < n && s[odd_start - 1] == s[odd_end + 1]) {
+                odd_start--;
+                odd_end++;
+                oddLength += 2;
+            }
+            if(len < oddLength) {
+                len = oddLength;
+                start = odd_start;
+            }
+            int even_start = i, even_end = i + 1;
+            int evenLength = 0;
+            while(even_start >= 0 && even_end < n && s[even_start] == s[even_end]) {
+                even_start--;
+                even_end++;
+                evenLength += 2;
+            }
+            if(len < evenLength) {
+                len = evenLength;
+                start = even_start + 1;
+            }
         }
-        return s.substr(x, y-x+1);
-    }
-    string check2(string s, int i) {
-        int x = i, y = i+1;
-        if(y<s.size() && s[x] != s[y]) return s.substr(x, 1);
-        while(x-1>=0 && y+1<s.size() && s[x-1]==s[y+1]) {
-            x--, y++;
-        }
-        return s.substr(x, y-x+1);
-    }
-    string longestPalin (string S) {
-        
-        int n = S.size();
-        string ans = "";
-        for(int i = 0; i < n; i++) {
-            string oddLength = check1(S, i);
-            string evenLength = check2(S, i);
-            if(ans.size()==0) {
-                if(oddLength.size() > evenLength.size()) ans = oddLength;
-                else ans = evenLength;
-            } 
-            if(oddLength.size() > evenLength.size()) 
-                if(ans.size() < oddLength.size())
-                    ans = oddLength;
-            if(oddLength.size() < evenLength.size()) 
-                if(ans.size() < evenLength.size())
-                    ans = evenLength;
-            // cout<<oddLength<<' '<<evenLength<<' '<<ans<<endl;
-        }
-        
-        return ans;
+        return s.substr(start, len);
     }
 };
 
