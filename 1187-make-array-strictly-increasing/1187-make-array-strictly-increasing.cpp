@@ -15,38 +15,44 @@ public:
         
         if(i == 0) {
             if(arr1[0] > arr2[0]) {
+                // replace 
                 int prevNum = arr1[0];
                 arr1[0] = arr2[0];
                 int replace = 1 + minOperations(i + 1, arr1, arr2);
                 minOp = min(minOp, replace);
-                arr1[0] = prevNum;
-            }   
-            minOp = min(minOp, minOperations(i + 1, arr1, arr2));
+                arr1[0] = prevNum;  // backtrack
+            }  
+            // skip
+            int skip = minOperations(i + 1, arr1, arr2); 
+            minOp = min(minOp, skip);
         }
     
         // skip + replace
         else if(arr1[i - 1] < arr1[i]) {
             int index = upper_bound(begin(arr2),end(arr2),arr1[i - 1]) - begin(arr2);
             if(index >= 0 && index < arr2.size() && arr2[index] > arr1[i - 1]) {
+                // replace
                 int prevNum = arr1[i];
                 arr1[i] = arr2[index];
                 int replace = 1 + minOperations(i + 1, arr1, arr2);
-                arr1[i] = prevNum;
                 minOp = min(minOp, replace);
+                arr1[i] = prevNum;   // backtrack
             }
-            
-            minOp = min(minOp, minOperations(i + 1, arr1, arr2));
+            // skip
+            int skip = minOperations(i + 1, arr1, arr2); 
+            minOp = min(minOp, skip);
         }
 
         // replace
         else {
             int index = upper_bound(begin(arr2),end(arr2),arr1[i - 1]) - begin(arr2);
             if(index >= 0 && index < arr2.size() && arr2[index] > arr1[i - 1]) {
+                // replace
                 int prevNum = arr1[i];
                 arr1[i] = arr2[index];
                 int replace = 1 + minOperations(i + 1, arr1, arr2);
-                arr1[i] = prevNum;
                 minOp = min(minOp, replace);
+                arr1[i] = prevNum;  // backtrack
             }
         }
 
