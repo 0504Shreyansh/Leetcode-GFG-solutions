@@ -1,48 +1,49 @@
 class Solution {
 public:
-    int solve(int i, int j, string &s, string &t, vector<vector<int>>& dp) {
-        if(i == 0 || j == 0) return 0;
-        if(dp[i][j] != -1) {
-            return dp[i][j];
+    string findLCS(string &str1, string &str2) {
+        int n = str1.size();
+        int m = str2.size();
+        vector<vector<int>> dp(n + 1, vector<int> (m + 1));
+        for(int i = 1; i <= n; i++) {
+            for(int j = 1; j <= m; j++) {
+                if(str1[i - 1] == str2[j - 1]) {
+                    dp[i][j] = 1 + dp[i - 1][j - 1];  
+                } else {
+                    dp[i][j] = max(dp[i - 1][j], dp[i][j - 1]);
+                }
+            }
+        }        
+        string lcs;
+        int i = n, j = m;
+        while(i > 0 && j > 0) {
+            if(str1[i - 1] == str2[j - 1]) {
+                lcs += str1[i - 1];
+                i--, j--;
+            }
+            else if(dp[i - 1][j] == dp[i][j]) {
+                i--;
+            }
+            else {
+                j--;
+            }
         }
-        if(s[i - 1] == t[j - 1]) {
-            return dp[i][j] = 1 + solve(i - 1, j - 1, s, t, dp);
-        }
-        return dp[i][j] = 0 + max(solve(i - 1, j, s, t, dp), solve(i, j - 1, s, t, dp));
+        reverse(begin(lcs),end(lcs));
+        return lcs;
     }
-
     string shortestCommonSupersequence(string str1, string str2) {
         int n = str1.size();
         int m = str2.size();
-        vector<vector<int>> dp(n + 1, vector<int> (m + 1, -1));
-        int curr = solve(n, m, str1, str2, dp);
-        int i = n, j = m;
-        string ans;
-        while(i > 0 && j > 0) {
-            if(str1[i - 1] == str2[j - 1]) {
-                ans += str1[i - 1];
-                i--, j--;
-            }
-            else {
-                if(dp[i - 1][j] >= dp[i][j - 1]) {
-                    ans += str1[i - 1];
-                    i--;
-                }
-                else {
-                    ans += str2[j - 1];
-                    j--;
-                }
-            }
+        string lcs = findLCS(str1, str2);
+        int i = 0, j = 0, k = 0;
+        string superString;
+        while(i < n && j < m && k < lcs.size()) {
+            while(str1[i] != lcs[k]) 
+                superString += str1[i++];
+            while(str2[j] != lcs[k])
+                superString += str2[j++];
+            superString += lcs[k];
+            i++, j++, k++;
         }
-        while(i > 0) {
-            ans += str1[i - 1];
-            i--;
-        }
-        while(j > 0) {
-            ans += str2[j - 1];
-            j--;
-        }
-        reverse(begin(ans),end(ans));
-        return ans;
+        return superString + str1.substr(i) + str2.substr(j);
     }
 };
