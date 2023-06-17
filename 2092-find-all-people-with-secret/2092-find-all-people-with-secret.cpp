@@ -31,12 +31,15 @@ public:
         for(int i = 0; i < meetings.size(); ) {
             int time = meetings[i][2];
             int index = i;
+            // for some time t, unite all people at once to avoid any confusion
             while(i < meetings.size() && time == meetings[i][2]) {
+                // unite all the peoples
                 u.unite(meetings[i][0], meetings[i][1]);
                 i++;
             }
             while(index < i) {
                 int x = meetings[index][0], y = meetings[index][1];
+                // if people are still not aware of the secret
                 if(u.findParent(x) != 0 && u.findParent(y) != 0) {
                     u.parent[x] = x;
                     u.parent[y] = y;
@@ -44,6 +47,7 @@ public:
                 index++;
             }
         }
+        // store how many people knows the secret
         vector<int> people;
         for(int i = 0; i < n; i++) {
             if(u.findParent(i) == 0) {
@@ -52,5 +56,4 @@ public:
         }
         return people;
     }
-
 };
