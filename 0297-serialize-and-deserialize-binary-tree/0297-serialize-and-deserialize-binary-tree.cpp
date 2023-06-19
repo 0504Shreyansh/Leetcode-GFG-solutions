@@ -11,6 +11,7 @@ class Codec {
 public:
     // Encodes a tree to a single string.
     string serialize(TreeNode* root) {
+        // Level order built of the string
         queue<TreeNode*> Q({root});
         string ans;
         while(Q.size()) {
@@ -24,16 +25,8 @@ public:
                     ans += ("#,");
                     continue;
                 }
-                if(curr->left) {
-                    Q.push(curr -> left);
-                } else {
-                    Q.push(NULL);
-                }
-                if(curr -> right) {
-                    Q.push(curr -> right); 
-                } else {
-                    Q.push(NULL);
-                }
+                Q.push(curr -> left);
+                Q.push(curr -> right);
             }
         }
         ans.pop_back();
@@ -46,6 +39,7 @@ public:
             return NULL;
         }
        
+        // Extract every node to be built level order wise
         stringstream ss(data);
         string word;
         vector<string> nodes;
