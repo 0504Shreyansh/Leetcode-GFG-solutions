@@ -7,14 +7,14 @@ using namespace std;
 class Solution {
   public:
     int leastInterval(int N, int K, vector<char> &tasks) {
-        unordered_map<int,int> mp;
-        for(auto &it : tasks) { 
-            mp[it]++;   
+        vector<int> freq(26);
+        for(auto &it : tasks) {
+            freq[it - 'A']++;
         }
         priority_queue<int> pq;
         queue<pair<int,int>> q;
-        for(auto &it : mp) {
-            pq.push(it.second);
+        for(auto &it : freq) {
+            if(it > 0) pq.push(it);
         }
         int time = 0;
         while(pq.size() || q.size()) {
