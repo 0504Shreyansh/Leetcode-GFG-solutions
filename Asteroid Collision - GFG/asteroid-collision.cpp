@@ -12,9 +12,6 @@ class Solution {
             if(it > 0) {
                 st.push(it);
             }
-            else if(it == 0) {
-                continue;
-            }
             else {
                 if(st.empty() || st.top() < 0) {
                     st.push(it);
