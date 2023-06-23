@@ -1,37 +1,35 @@
 class Solution {
 public:
-    /*Concept -> 1. Push +ve numbers.
-    2. If -ve is encountered, then keep popping the smaller +ve magnitudes.
-    3. If the stack is empty, then push the -ve number.
-    4. If same magnitude numbers then pop the +ve number.
-    */
     vector<int> asteroidCollision(vector<int>& asteroids) {
-        
         stack<int> st;
-        vector<int> ans;
-        
-        for(auto i:asteroids) {
-            while(!st.empty() && st.top()>0 && i<0) {
-                int diff = i + st.top();
-                if(abs(i)>st.top())  //Pop as the -ve val is greater than the +ve val
+        for(auto &it : asteroids) {
+            if(it > 0 || st.empty()) {
+                st.push(it);
+            } else {
+                if(st.top() < 0) {
+                    st.push(it);
+                } else if(st.top() > abs(it)) {
+                    continue;
+                } else if(st.top() == abs(it)) {
                     st.pop();
-                else if(st.top()>abs(i)) //Break here so as to push the val 
-                    i = 0;
-                else { //Equal wala case
-                    i = 0;
-                    st.pop();
+                } else {
+                    bool f = 0;
+                    while(st.size() && st.top() > 0 && st.top() <= abs(it)) {
+                        if(st.top() == abs(it)) {
+                            st.pop(); f = 1;
+                            break;
+                        } st.pop();
+                    }
+                    if(st.size() && st.top() >= abs(it)) continue;
+                    if(!f) st.push(it);
                 }
             }
-            if(i!=0) 
-                st.push(i);
         }
-    
+        vector<int> res(st.size());
         while(st.size()) {
-            ans.push_back(st.top());
+            res[st.size() - 1] = st.top();
             st.pop();
         }
-        reverse(ans.begin(),ans.end());
-        
-        return ans;
+        return res;
     }
 };
