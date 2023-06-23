@@ -1,14 +1,14 @@
 class Solution {
 public:
     int leastInterval(vector<char>& tasks, int n) {
-        unordered_map<int,int> mp;
+        vector<int> mp(26, 0);
         for(auto &it : tasks) {
-            mp[it]++;
+            mp[it - 'A']++;
         }
         priority_queue<int> pq;
         queue<pair<int,int>> q;
         for(auto &it : mp) {
-            pq.push(it.second);
+            if(it) pq.push(it);
         }
         int time = 0;
         while(pq.size() || q.size()) {
