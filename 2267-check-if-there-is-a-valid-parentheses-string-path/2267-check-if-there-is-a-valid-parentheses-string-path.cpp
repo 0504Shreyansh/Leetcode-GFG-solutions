@@ -1,7 +1,8 @@
 class Solution {
 public:
     int solve(int i, int j, int ob_cb, vector<vector<char>>& grid, vector<vector<vector<int>>>& dp) {
-        if(i >= grid.size() || j >= grid[0].size()) {
+        int n = grid.size(), m = grid[0].size();
+        if(i >= n || j >= m) {
             return false;
         }
         if(grid[i][j] == ')' && ob_cb == 0) {
@@ -10,7 +11,7 @@ public:
         if(dp[i][j][ob_cb] != -1) {
             return dp[i][j][ob_cb];
         }
-        if(i == grid.size() - 1 && j == grid[0].size() - 1) {
+        if(i == n - 1 && j == m - 1) {
             return ob_cb + ((grid[i][j] == '(') ? 1 : -1) == 0;
         }
         return dp[i][j][ob_cb] = solve(i + 1, j, ob_cb + ((grid[i][j] == '(') ? 1 : -1), grid, dp) |
