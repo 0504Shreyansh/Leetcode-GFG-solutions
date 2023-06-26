@@ -16,11 +16,10 @@ public:
         return dp[i][j][ob_cb] = false;
     }
 
-    // Leetcode 2267. Check if there is a Valid Parantheses String Path
     bool hasValidPath(vector<vector<char>>& grid) {
         if(grid[0][0] == ')') return false;
         int n = grid.size(), m = grid[0].size();
-        if((m+n-1)&1) return false;
+        if((m+n-1)&1) return false;   // not possible
         vector<vector<vector<int>>> dp(n, 
             vector<vector<int>> (m, vector<int> (n+m+1, -1)));
         return solve(0, 0, 0, grid, dp);
