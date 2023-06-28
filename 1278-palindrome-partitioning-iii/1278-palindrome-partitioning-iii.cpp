@@ -23,7 +23,7 @@ private:
         for(int j = i; j < s.size(); ++j) {
             curr += s[j];
             int cur = changes(curr) + solve(j + 1, s, k - 1, dp);
-            cout << curr << ' ' << cur << endl; 
+            // cout << curr << ' ' << cur << endl; 
             res = min(res, cur);
         }
         return dp[i][k] = res;
