@@ -9,7 +9,9 @@ public:
         for(auto v : dir) {
             int I = i + v.first;
             int J = j + v.second;
-            if(dfs(I, J, grid, row, col)) return true;
+            if(I >= 0 && I < row && J >= 0 && J < col && grid[I][J] == 0) {
+                ans |= dfs(I, J, grid, row, col);
+            }
         }
         return ans;
     }
