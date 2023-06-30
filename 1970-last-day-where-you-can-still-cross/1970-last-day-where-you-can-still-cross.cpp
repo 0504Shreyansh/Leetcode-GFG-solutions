@@ -36,14 +36,14 @@ public:
         int high = cells.size() - 1;
         int res = 0;
         while(low <= high) {
-            // cout << low << ' ' << high << endl;
             int mid = (low + high) / 2;
             if(isPossible(mid, cells, row, col)) {
+                res = mid;
                 low = mid + 1;
             } else {
                 high = mid - 1;
             }
         }
-        return low;
+        return res + 1;
     }
 };
