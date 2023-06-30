@@ -1,14 +1,13 @@
 class Solution {
-public:
+private:
     vector<pair<int, int>> dir = {{-1, 0}, {1, 0}, {0, 1}, {0, -1}};
     bool dfs(int i, int j, vector<vector<int>>& grid, int row, int col) {
-        if(i < 0 || i >= row || j < 0 || j >= col || grid[i][j] != 0) return false;
         if(i == row - 1) return true;
         grid[i][j] = -1;
         bool ans = false;
-        for(auto v : dir) {
-            int I = i + v.first;
-            int J = j + v.second;
+        for(auto [dx, dy] : dir) {
+            int I = i + dx;
+            int J = j + dy;
             if(I >= 0 && I < row && J >= 0 && J < col && grid[I][J] == 0) {
                 ans |= dfs(I, J, grid, row, col);
             }
@@ -30,6 +29,7 @@ public:
         return false;
     }
 
+public:
     int latestDayToCross(int row, int col, vector<vector<int>>& cells) {
         int low = 0;
         int high = cells.size() - 1;
