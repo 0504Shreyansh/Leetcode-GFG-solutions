@@ -17,10 +17,12 @@ private:
 
     bool isPossible(int mid, vector<vector<int>>& cells, int row, int col) {
         vector<vector<int>> grid(row, vector<int> (col));
+        // Block all the required cells
         for(int i = 0; i <= mid; i++) {
             grid[cells[i][0] - 1][cells[i][1] - 1] = 1;
         }
-
+    
+        // Check if it can be crossed
         for(int j = 0; j < col; j++) {
             if(grid[0][j] == 0 && dfs(0, j, grid, row, col)) {
                 return true;
@@ -34,13 +36,15 @@ public:
         int low = 0;
         int high = cells.size() - 1;
         int res = 0;
+        
+        // Apply binary search for the cells to check we can cross
         while(low <= high) {
             int mid = (low + high) / 2;
             if(isPossible(mid, cells, row, col)) {
                 res = mid;
-                low = mid + 1;
+                low = mid + 1;  // if we can, go for further more days
             } else {
-                high = mid - 1;
+                high = mid - 1; // else go backwards by some days
             }
         }
         return res + 1;
