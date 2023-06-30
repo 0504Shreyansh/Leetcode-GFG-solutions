@@ -9,11 +9,8 @@ public:
         for(auto v : dir) {
             int I = i + v.first;
             int J = j + v.second;
-          
             if(dfs(I, J, grid, row, col)) return true;
-            
         }
-        // grid[i][j] = 0;
         return ans;
     }
 
