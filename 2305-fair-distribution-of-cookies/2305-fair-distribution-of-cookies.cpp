@@ -1,31 +1,23 @@
 class Solution {
 public:
     int ans = INT_MAX;
-    void recSol(int i, int n, int k, vector<int>& cookies, vector<int>& countOfCookies) {
-        // Base case 
-        if(i==-1) {
-            // Take out the maximum count of the cookies accquired by any child
-            // This maxima should be minimised
-            // Hence, try all possibilities
-            int maxi = INT_MIN;
-            for(auto x : countOfCookies)
-                maxi = max(maxi, x);
-            if(maxi != 0) 
-                if(ans > maxi)
-                    ans = maxi;
-            return ; 
+    void solve(int i, int n, vector<int>& cookies, int k, vector<int>& dist) {
+        if(i >= n) {        
+            int maxi = *max_element(begin(dist),end(dist));
+            ans = min(ans, maxi); 
+            return ;
         }
-        for(int j = 0; j < k; j++) {
-            countOfCookies[j] += cookies[i];  //Pick 
-            recSol(i-1, n, k, cookies, countOfCookies);
-            countOfCookies[j] -= cookies[i];  //NotPick
+
+        for(int j = 0; j < k; ++j) {
+            dist[j] += cookies[i];
+            solve(i + 1, n, cookies, k, dist);
+            dist[j] -= cookies[i];
         }
     }
 
     int distributeCookies(vector<int>& cookies, int k) {
-        int n = cookies.size();
-        vector<int> countOfCookies(k, 0);
-        recSol(n-1, n, k, cookies, countOfCookies);
+        vector<int> dist(k);
+        solve(0, cookies.size(), cookies, k, dist);
         return ans;
     }
 };
