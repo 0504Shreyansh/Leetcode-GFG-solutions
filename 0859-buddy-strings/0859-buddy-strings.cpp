@@ -25,7 +25,7 @@ public:
                     if(c1 == goal[i] && c2 == s[i]) {
                         continue;
                     }
-                } else {
+                } else {   // more changes
                     return false;
                 }
             }
@@ -38,13 +38,11 @@ public:
             if(s1.size() == 1) {   // all chars are same
                 if(*s1.begin() == *s2.begin()) return true;
                 return false;  
-            } else if(n != s1.size()) {   
+            } else if(n != s1.size()) {     // diff chars at 2 diff pos 
                 return true;
             }
         } 
-        if(s == goal) return false;
-        // if(idx1 == -1 && idx2 == -1) return false;
-        // if(idx2 == -1) return false;
+        if(s == goal) return false;   // not possible as considered by above set cases
         return true;
     }
 };
