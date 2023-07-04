@@ -8,23 +8,28 @@ using namespace std;
 
 class Solution{
   public:
+    int dp[11][1025][11];
     bool solve(int i, int mask, int *a, int n, int k, int currSum, int getSum) {
         if(k == 0) return true;
         if(currSum == getSum) {
             return solve(0, mask, a, n, k - 1, 0, getSum);
         }
+        if(dp[i][mask][k] != -1) {
+            return dp[i][mask][k];
+        }
         for(int j = i; j < n; ++j) {
             if(mask & (1 << j)) continue;
             if(a[j] + currSum <= getSum) {
                 if(solve(j + 1, mask | (1 << j), a, n, k, currSum + a[j], getSum)) {
-                    return true;
+                    return dp[i][mask][k] = true;
                 }
             }
         }
-        return false;
+        return dp[i][mask][k] = false;
     }
     bool isKPartitionPossible(int a[], int n, int k)
     {
+        memset(dp, -1, sizeof dp);
         int sum = 0;
         for(int i = 0; i < n; ++i) {
             sum += a[i];
