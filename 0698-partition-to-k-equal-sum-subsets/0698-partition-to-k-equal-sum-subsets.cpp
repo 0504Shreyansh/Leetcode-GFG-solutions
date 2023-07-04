@@ -1,8 +1,10 @@
 class Solution {
 public:
     bool solve(int i, int mask, int k, int currSum, int reqSum, vector<int>& nums, vector<int>& dp) {
+        // all subsets are created
         if(mask == (1 << nums.size()) - 1) return true;
         if(currSum == reqSum) {
+            // one subset created -> move further
             return solve(0, mask, k - 1, 0, reqSum, nums, dp);
         }
         if(i >= nums.size()) {
