@@ -36,7 +36,7 @@ public:
             }
         }
         vector<int> fact(13, 1);
-        for(int i = 1; i <= 12; ++i) {
+        for(int i = 2; i <= 12; ++i) {
             fact[i] = i * fact[i - 1];
         }
         for(auto &it : freq) {  // decrease the repeated count
