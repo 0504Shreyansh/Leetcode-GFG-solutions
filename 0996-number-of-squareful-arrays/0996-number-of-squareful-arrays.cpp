@@ -10,30 +10,28 @@ private:
         if(mask == (1 << n) - 1) {
             return 1;
         }
-        if(dp[prev][mask] != -1) {
-            return dp[prev][mask];
+        if(dp[prev + 1][mask] != -1) {
+            return dp[prev + 1][mask];
         }
         int ans = 0;
         for(int i = 0; i < n; i++) {
-            if(mask & (1 << i)) continue;
-            if(!isPerfectSquare(nums[prev], nums[i])) continue;
-            ans += solve(i, mask | (1 << i), nums, dp);
+            if(prev == -1) {
+                ans += solve(i, mask | (1 << i), nums, dp);
+            } else if(!(mask & (1 << i)) && isPerfectSquare(nums[prev], nums[i])) {
+                ans += solve(i, mask | (1 << i), nums, dp);
+            }
         }
-        return dp[prev][mask] = ans;
+        return dp[prev + 1][mask] = ans;
     }
 
 public:
     int numSquarefulPerms(vector<int>& nums) {
         int n = nums.size();
-        int mask = 0;
-        int ans = 0;
-        vector<vector<int>> dp(n + 1, vector<int> ((1 << n + 1), -1));
+        vector<vector<int>> dp(n + 1, vector<int> ((1 << n), -1));
+        int ans = solve(-1, 0, nums, dp);
         unordered_map<int, int> freq;
-        for(int i = 0; i < n; i++) {
-            freq[nums[i]]++;
-            if(!(mask & (1 << i))) {  // starting point
-                ans += solve(i, mask | (1 << i), nums, dp);
-            }
+        for(auto &it : nums) {
+            freq[it]++;
         }
         vector<int> fact(13, 1);
         for(int i = 2; i <= 12; ++i) {
