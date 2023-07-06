@@ -4,10 +4,10 @@ public:
     unordered_map<int,int> countOnes;
     bool isFlipped = false;
     Bitset(int size) {
-        org.resize(size);
-        fill(begin(org),end(org),'0');
-        flipped.resize(size);
-        fill(begin(flipped),end(flipped),'1');
+        for(int i = 0; i < size; ++i) {
+            org.push_back('0');
+            flipped.push_back('1');
+        }
     }
     
     void fix(int idx) {
@@ -43,15 +43,13 @@ public:
     }
     
     bool one() {
-        if(!isFlipped) 
-            return countOnes.size() != 0;
-        return countOnes.size() != org.size();
+        return (!isFlipped) ? countOnes.size() != 0 :
+            countOnes.size() != org.size();
     }
     
     int count() {
-        if(!isFlipped)
-            return countOnes.size();
-        return org.size() - countOnes.size();
+        return (!isFlipped) ? countOnes.size() : 
+            (org.size() - countOnes.size());
     }
     
     string toString() {
