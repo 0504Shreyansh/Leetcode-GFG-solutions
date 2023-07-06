@@ -1,12 +1,12 @@
 class Solution {
 public:
-    int solve(int i, int mask, vector<vector<int>>& students, vector<vector<int>>& mentors, vector<vector<int>>& dp) {
+    int solve(int i, int mask, vector<vector<int>>& students, vector<vector<int>>& mentors, vector<int>& dp) {
         int n = mentors.size(), m = mentors[0].size();
         if(i >= n) {
             return 0;
         }
-        if(dp[i][mask] != -1) {
-            return dp[i][mask];   
+        if(dp[mask] != -1) {
+            return dp[mask];   
         }
         int maxScore = 0, currScore;
         for(int j = 0; j < n; ++j) {
@@ -21,11 +21,11 @@ public:
                 maxScore = max(maxScore, currScore);
             }
         }
-        return dp[i][mask] = maxScore;
+        return dp[mask] = maxScore;
     }
     int maxCompatibilitySum(vector<vector<int>>& students, vector<vector<int>>& mentors) {
-        vector<vector<int>> dp(students.size(),
-            vector<int> ((1 << students.size()), -1));
+    
+        vector<int> dp(1 << students.size(), -1);
         return solve(0, 0, students, mentors, dp);
     }
 };
