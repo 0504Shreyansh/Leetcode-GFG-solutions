@@ -19,11 +19,8 @@ public:
             int curr = 0;
             for(int j = 0; j < n; ++j) {
                 if(s[j] != ch) {
-                    while(!dq.empty() && dq.size() == k && i <= j) {
-                        if(dq.front() == i) {
-                            dq.pop_front();
-                        }
-                        i++;
+                    while(dq.size() == k && i <= j) {
+                        if(dq.front() == i++) dq.pop_front();
                     }
                     dq.push_back(j);    
                 }
