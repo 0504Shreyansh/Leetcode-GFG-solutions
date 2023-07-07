@@ -2,18 +2,21 @@ class Solution {
 public:
     vector<int> masks;
     void solve(int i, int mask, vector<string>& req_skills, vector<vector<string>>& people, vector<int>& temp, vector<int>& ans) {
-        if(mask == (1 << req_skills.size()) - 1) {
-            if(temp.size() < ans.size()) {
-                ans = temp;
+        if(i >= req_skills.size()) {
+            if(mask == (1 << req_skills.size()) - 1) {
+                if(temp.size() < ans.size()) {
+                    ans = temp;
+                }
+                return ;
             }
-            return ;
         }
         if(i >= req_skills.size() || ans.size() < temp.size()) {
             return ;
         }
         
-        if(mask & (1 << i)) solve(i + 1, mask, req_skills, people, temp, ans);
-        else {
+        if(mask & (1 << i)) {  // leave
+            solve(i + 1, mask, req_skills, people, temp, ans);
+        } else {   // look fo rbetter oppurtunities
             for(int j = 0; j < people.size(); ++j) {
                 if(masks[j] & (1 << i)) {
                     temp.push_back(j);
