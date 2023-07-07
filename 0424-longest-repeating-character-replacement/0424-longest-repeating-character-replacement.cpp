@@ -30,7 +30,6 @@ public:
                 curr = max(curr, j - i + 1);
             }
             ans = max(ans, curr);
-            cout << curr << ' ';
         }
         return ans;
     }
