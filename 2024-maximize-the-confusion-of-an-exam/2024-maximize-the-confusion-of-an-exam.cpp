@@ -8,15 +8,11 @@ public:
         int n = answerKey.size();
         deque<int> dq;
         while(j < n) {
-            if(answerKey[j] == 'T') {
-
-            }
-            else {
+            if(answerKey[j] == 'F') {
                 if(dq.size() < k) {
                     dq.push_back(j);
                 }
                 else {
-
                     while(dq.size() == k && i <= j) {
                         if(dq.front() == i) {
                             dq.pop_front();
@@ -36,10 +32,7 @@ public:
         deque<int> dq2;
         int curr2 = 0;
         while(j2 < n) {
-            if(answerKey[j2] == 'F') {
-
-            }
-            else {
+            if(answerKey[j2] == 'T') {
                 if(dq2.size() < k) {
                     dq2.push_back(j2);
                 }
