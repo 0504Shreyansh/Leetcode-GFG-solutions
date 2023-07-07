@@ -10,9 +10,7 @@ public:
                 return ;
             }
         }
-        if(i >= req_skills.size() || ans.size() < temp.size()) {
-            return ;
-        }
+
         
         if(mask & (1 << i)) {  // leave
             solve(i + 1, mask, req_skills, people, temp, ans);
