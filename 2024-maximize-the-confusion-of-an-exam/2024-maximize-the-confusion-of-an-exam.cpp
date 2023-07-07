@@ -1,11 +1,11 @@
 class Solution {
 public:
     int maxConsecutiveAnswers(string answerKey, int k) {
-
-        // T --> F
         int n = answerKey.size();
-        int i = 0;
         int ans = 0;
+        
+        // T --> F
+        int i = 0;
         deque<int> dq;
         for(int j = 0; j < n; ++j) {
             if(answerKey[j] == 'F') {
