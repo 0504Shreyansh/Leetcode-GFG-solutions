@@ -7,8 +7,8 @@ public:
                 if(temp.size() < ans.size()) {
                     ans = temp;
                 }
-                return ;
             }
+            return ;
         }
 
         
