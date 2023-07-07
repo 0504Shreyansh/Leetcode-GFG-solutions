@@ -16,7 +16,6 @@ public:
         for(char ch = 'A'; ch <= 'Z'; ++ch) {
             int i = 0;
             deque<int> dq;
-            int curr = 0;
             for(int j = 0; j < n; ++j) {
                 if(s[j] != ch) {
                     while(dq.size() == k && i <= j) {
@@ -24,9 +23,8 @@ public:
                     }
                     dq.push_back(j);    
                 }
-                curr = max(curr, j - i + 1);
+                ans = max(ans, j - i + 1);
             }
-            ans = max(ans, curr);
         }
         return ans;
     }
