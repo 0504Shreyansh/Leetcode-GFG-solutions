@@ -1,32 +1,36 @@
 class Solution {
 public:
     vector<string> wordSubsets(vector<string>& words1, vector<string>& words2) {
-        int n = words1.size();
-        int m = words2.size();
-        vector<int> pre(26);
-        for(int i = 0; i < words2.size(); i++) {
+        // store the maximum freq of any char in any of the strings of words2
+        // ultimately we need to make sure that all strings chars are present
+        // better choice is to check the maximum occ. of any char
+        vector<int> maxOcc(26);
+        for(auto &it : words2) {
             vector<int> curr(26);
-            for(int j = 0; j < words2[i].size(); j++) {
-                int index = words2[i][j] - 'a';
+            for(auto &jt : it) {
+                int index = jt - 'a';
                 curr[index]++;
-                pre[index] = max(pre[index], curr[index]);
+                maxOcc[index] = max(maxOcc[index], curr[index]);  
             }
         }
+        
         vector<string> res;
-        for(int i = 0; i < n; i++) {
+        for(auto &it : words1) {
+            // store count of the current word
             vector<int> curr(26);
-            for(int j = 0; j < words1[i].size(); j++) {
-                int index = words1[i][j] - 'a';
+            for(auto &jt : it) {
+                int index = jt - 'a';
                 curr[index]++;
             }
+            // check if any char occs doesn't satisfy max occ condtions
             bool canTake = true;
             for(int j = 0; j < 26; j++) {
-                if(curr[j] < pre[j]) {
+                if(curr[j] < maxOcc[j]) {
                     canTake = false;
                     break;
                 }
             }
-            if(canTake) res.push_back(words1[i]);
+            if(canTake) res.push_back(it);
         }
         return res;
     }
