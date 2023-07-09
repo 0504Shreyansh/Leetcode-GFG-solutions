@@ -4,17 +4,14 @@ private:
         int n = s.size();
         int maxSum = 0;
         for(int k = 1; k <= 2; k++) {
-            int currSum = 0;
-            bool minusOneTaken = false;
+            int cmax = 0, cmin = 0;
             for(int i = 0; i < n; i++) {
-                if(s[i] == c1) {
-                    currSum += 1;
-                } else if(s[i] == c2) {
-                    currSum -= 1;
-                    minusOneTaken = true;
-                }
-                if(currSum < 0) currSum = 0, minusOneTaken = false;
-                if(minusOneTaken) maxSum = max(maxSum, currSum);
+                if(s[i] == c1) cmax++;
+                else if(s[i] == c2) cmin++;
+                if(cmax>0 && cmin>0) maxSum = max(maxSum, cmax-cmin);
+                if(cmax < 0) cmax = 0;
+                if(cmin < 0) cmin = 0;
+                if(cmax < cmin) cmax = cmin = 0;
             }
             reverse(begin(s),end(s));
         }
