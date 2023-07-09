@@ -2,20 +2,20 @@ class Solution {
 private:
     int kadane(char c1, char c2, string &s) {
         int n = s.size();
-        int maxSum = 0;
+        int maxDiff = 0;
         for(int k = 1; k <= 2; k++) {
             int cmax = 0, cmin = 0;
             for(int i = 0; i < n; i++) {
                 if(s[i] == c1) cmax++;
                 else if(s[i] == c2) cmin++;
-                if(cmax>0 && cmin>0) maxSum = max(maxSum, cmax-cmin);
+                if(cmax && cmin) maxDiff = max(maxDiff, cmax-cmin);
+                if(cmax < cmin) cmax = cmin = 0;
                 if(cmax < 0) cmax = 0;
                 if(cmin < 0) cmin = 0;
-                if(cmax < cmin) cmax = cmin = 0;
             }
             reverse(begin(s),end(s));
         }
-        return maxSum;
+        return maxDiff;
     }
 
 public:
