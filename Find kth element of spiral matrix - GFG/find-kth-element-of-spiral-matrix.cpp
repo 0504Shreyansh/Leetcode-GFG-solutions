@@ -16,29 +16,21 @@ class Solution
  		int right = m - 1;
  		while(top <= bottom && left <= right) {
  		    for(int i = left; i <= right; i++) {
- 		        k--;
- 		        if(k == 0) return a[top][i];
+ 		        if(--k == 0) return a[top][i];
  		    }
  		    top++;
  		    for(int i = top; i <= bottom; i++) {
- 		        k--;
- 		        if(k == 0) return a[i][right];
+ 		        if(--k == 0) return a[i][right];
  		    }
  		    right--;
- 		 //   if(left <= right) {
-     		    for(int i = right; i >= left; i--) {
-     		        k--;
-     		        if(k == 0) return a[bottom][i];
-     		    }
- 		        bottom--;
- 		 //   }
- 		 //   if(top <= bottom) {
-     		    for(int i = bottom; i >= top; i--) {
-     		        k--;
-     		        if(k == 0) return a[i][left];
-     		    }
-     		    left++;
- 		 //   }
+     		for(int i = right; i >= left; i--) {
+     		    if(--k == 0) return a[bottom][i];
+     		}
+ 		    bottom--;
+     		for(int i = bottom; i >= top; i--) {
+     		    if(--k == 0) return a[i][left];
+     		}
+     		left++;
  		}
  		return -1;
     }
