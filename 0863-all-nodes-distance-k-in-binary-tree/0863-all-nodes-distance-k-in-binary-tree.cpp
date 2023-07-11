@@ -8,7 +8,7 @@
  * };
  */
 class Solution {
-public:
+private:
     map<TreeNode*, TreeNode*> links;
     void dfs(TreeNode* root) {
         if(root->left) {
@@ -20,6 +20,7 @@ public:
             dfs(root->right);
         }
     }
+public:
     vector<int> distanceK(TreeNode* root, TreeNode* target, int k) {
         links[root] = nullptr;
         dfs(root);
