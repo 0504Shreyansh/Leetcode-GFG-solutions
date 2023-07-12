@@ -9,19 +9,17 @@ public:
         s.push(num);
         int top = s.top();
         s.pop();
-        g.push(-1*top);
-        // try to equalise the number of vals in both the pqs
+        g.push(-top);
         if(g.size() > s.size()) {
-            top = g.top();
+            int top = -g.top();
             g.pop();
-            s.push(-1*top);
+            s.push(top);
         }
     }
     
     double findMedian() {
-        if(g.size()==s.size())
-            return (s.top()-g.top())/2.0;
-        return s.top();
+        return (s.size() != g.size()) ? s.top() 
+            : (1.0 * (s.top() - g.top())) / 2;
     }
 };
 
