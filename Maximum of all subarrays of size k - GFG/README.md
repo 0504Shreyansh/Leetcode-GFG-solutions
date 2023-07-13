@@ -45,7 +45,7 @@ You dont need to read input or print anything. Complete the function <strong>max
 <strong>Expected Auxiliary Space:</strong> O(k)</span></p>
 
 <p><span style="font-size:18px"><strong>Constraints:</strong><br>
-1 ≤ N ≤ 10<sup>7</sup><br>
+1 ≤ N ≤ 10<sup>5</sup><br>
 1 ≤ K ≤ N<br>
 0 ≤ arr[i] ≤ 10<sup>7</sup></span></p>
 </div>
