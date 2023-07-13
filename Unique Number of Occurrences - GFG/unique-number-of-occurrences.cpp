@@ -10,15 +10,13 @@ class Solution
     public:
     bool isFrequencyUnique(int n, int arr[])
     {
-        unordered_map<int, int> mp, mpp;
-        for(int i = 0; i < n; i++) {
-            mp[arr[i]]++;
-        }
-        int size = mp.size();
+        map<int, int> mp;
+        for(int i = 0; i < n; i++) mp[arr[i]]++;
+        map<int, int> mpp;
         for(auto &it : mp) {
             mpp[it.second]++;
         }
-        return size == mpp.size();
+        return (mp.size() == mpp.size());
     }
 };
 
