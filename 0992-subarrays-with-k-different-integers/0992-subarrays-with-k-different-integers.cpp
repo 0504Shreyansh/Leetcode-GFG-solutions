@@ -21,9 +21,12 @@ public:
         return ans;
     }
     int subarraysWithKDistinct(vector<int>& nums, int k) {
+        // not possible to directly count for k different integers
         int maximum = 0;
         for(auto &it : nums)
             maximum = max(maximum, it);
-        return count(nums, k, maximum) - count(nums, k - 1, maximum);
+        int subarraysWithAtMostKDistincts = count(nums, k, maximum);
+        int subarraysWithAtMostK_1Distinct = count(nums, k - 1, maximum);
+        return subarraysWithAtMostKDistincts - subarraysWithAtMostK_1Distinct;
     }
 };
