@@ -7,7 +7,7 @@ public:
         int flips = 0;
         for (int j = 0; j < n; j++) {
             if(nums[j] == 0) flips++;
-            while(flips > k && i <= j) {
+            while(flips > k) {
                 if(nums[i] == 0) flips--;
                 i++;
             }
