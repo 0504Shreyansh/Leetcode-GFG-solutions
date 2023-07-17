@@ -9,33 +9,28 @@
  * };
  */
 class Solution {
-private:
-    ListNode *reverse(ListNode *head) {
-        ListNode *cur = head, *prev = nullptr, *forward;
-        while(cur != nullptr) {
-            forward = cur -> next;
-            cur -> next = prev;
-            prev = cur;
-            cur = forward;
-        }
-        return prev;
-    } 
 public:
     ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
-        l1 = reverse(l1);
-        l2 = reverse(l2);
+        stack<int> s1, s2, ansStack;
+        while(l1) {s1.push(l1->val); l1 = l1 -> next;}
+        while(l2) {s2.push(l2->val); l2 = l2 -> next;}
         int carry = 0;
-        ListNode *temp = new ListNode(-1);
-        ListNode *ans = temp;
-        while(l1 || l2 || carry) {
+        while(s1.size() || s2.size() || carry) {
             int val = carry;
-            if(l1) { val += l1 -> val; l1 = l1 -> next; }
-            if(l2) { val += l2 -> val; l2 = l2 -> next; }
+            if(s1.size()) { val += s1.top(); s1.pop(); }
+            if(s2.size()) { val += s2.top(); s2.pop(); }
             carry = val / 10;
             val %= 10;
-            temp -> next = new ListNode(val);
-            temp = temp -> next;
+            ansStack.push(val);
         }
-        return reverse(ans->next);
+        // without reversing use stack :)
+        ListNode *res = new ListNode(-1);
+        ListNode *ans = res;
+        while(ansStack.size()) {
+            res -> next = new ListNode(ansStack.top()); 
+            ansStack.pop(); 
+            res = res -> next;
+        }
+        return ans->next;
     }
 };
