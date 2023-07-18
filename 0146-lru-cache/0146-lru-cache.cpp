@@ -28,10 +28,8 @@ public:
     }
 
     void deletenode(node * delnode) {
-        node * delprev = delnode -> prev;
-        node * delnext = delnode -> next;
-        delprev -> next = delnext;
-        delnext -> prev = delprev;
+        delnode -> prev -> next = delnode -> next;
+        delnode -> next -> prev = delnode -> prev;
     }
 
     int get(int key_) {
