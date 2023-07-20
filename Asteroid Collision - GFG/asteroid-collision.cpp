@@ -8,39 +8,30 @@ class Solution {
   public:
     vector<int> asteroidCollision(int N, vector<int> &a) {
         stack<int> st;
-        for(auto &it : a) {
-            if(it > 0) {
+        for (auto &it : a) {
+            if (st.empty() || it > 0) {
                 st.push(it);
-            }
-            else {
-                if(st.empty() || st.top() < 0) {
-                    st.push(it);
-                }
-                else if(st.top() == abs(it)) {
+            } else if (st.top() < 0 && it < 0) {
+                st.push(it);
+            } else {
+                while (st.size() && st.top() > 0 && it < 0 && st.top() < abs(it)) {
                     st.pop();
                 }
-                else if(st.top() > abs(it)) {
-                    continue;
-                }
-                else {
-                    bool f = 0;
-                    while(!st.empty() && st.top() > 0 && st.top() <= abs(it)) {
-                        if(st.top() == abs(it)) {
-                            st.pop(); f = 1;
-                            break;
-                        } else st.pop();
-                    }
-                    if(st.size() && st.top() > abs(it)) continue;
-                    if(!f)
+                if (st.empty()) {
                     st.push(it);
+                } else if (st.top() < 0) {
+                    st.push(it);
+                } else if (st.top() == abs(it) && it < 0) {
+                    st.pop();
                 }
             }
-        }
-        vector<int> res(st.size());
-        while(!st.empty()) {
-            res[st.size() - 1] = st.top();
+        }   
+        vector<int> res;
+        while (st.size()) {
+            res.push_back(st.top());
             st.pop();
         }
+        reverse(begin(res),end(res));
         return res;
     }
 };
