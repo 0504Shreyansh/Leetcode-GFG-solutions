@@ -3,8 +3,8 @@ private:
     bool isPossible(vector<int>& dist, double hour, int mid) {
         double ans = 0.0;
         for (int i = 0; i < dist.size() - 1; i++)
-            ans += ceil(((double)dist[i] / mid));
-        ans += ((double)dist.back()) / mid;
+            ans += (dist[i] + mid - 1) / mid;
+        ans += (1.0 * dist.back()) / mid;
         return ans <= hour;
     }
 public:
@@ -21,7 +21,6 @@ public:
                 low = mid + 1;
             }
         }
-        // cout << low <<' ' << high << ' ' << ans << endl;
         return ans == -1 ? -1 : ans;
     }
 };
