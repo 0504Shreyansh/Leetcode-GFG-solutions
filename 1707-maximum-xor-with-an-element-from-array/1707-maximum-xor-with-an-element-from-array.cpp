@@ -55,6 +55,7 @@ public:
 class Solution {
 public:
     vector<int> maximizeXor(vector<int>& nums, vector<vector<int>>& queries) {
+        // sort so that only less values than m are always considered for each query
         sort(begin(nums),end(nums));
         for (int i = 0; i < queries.size(); i++) {
             queries[i].push_back(i);
@@ -65,21 +66,20 @@ public:
         Trie* root = new Trie();
         int i = 0;
         int n = nums.size();
-        int m = queries.size();
-        vector<int> ans(m, -1);
+        vector<int> ans(queries.size(), -1);
         for (auto &q : queries) {
             int x = q[0];
             int m = q[1];
             int index = q[2];
+            // insert all smaller values
             while (i < n && nums[i] <= m) {
-                root -> insert(nums[i]);
-                i++;
+                root -> insert(nums[i++]);
             }
             int num = root -> solve(x, m);
+            // if some number from nums is found -> xor with x, else store -1
             if (num != -1) {
                 ans[index] = (x ^ num);
             }
-            // for (auto &it : ans) cout << it << ' '; cout << endl;
         }
         return ans;
     }
