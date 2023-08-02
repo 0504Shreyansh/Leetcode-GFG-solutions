@@ -1,24 +1,21 @@
 class Solution {
 private:
-    void f(int mask, vector<int>& nums, vector<int>& temp, vector<vector<int>>& res) {
-        if (temp.size() == nums.size()) {
-            res.push_back(temp);
+    void f(int i, vector<int>& nums, vector<vector<int>>& res) {
+        if (i >= nums.size()) {
+            res.push_back(nums);
             return ;
         }
-        for (int i = 0; i < nums.size(); i++) {
-            if ((mask & (1 << i)) == 0) {
-                temp.push_back(nums[i]);
-                f(mask | (1 << i), nums, temp, res);
-                temp.pop_back();
-            }
+        for (int j = i; j < nums.size(); j++) {
+            swap(nums[i], nums[j]);
+            f(i + 1, nums, res);
+            swap(nums[i], nums[j]);
         }
     }
 
 public:
     vector<vector<int>> permute(vector<int>& nums) {
         vector<vector<int>> res;
-        vector<int> temp;
-        f(0, nums, temp, res);
+        f(0, nums, res);
         return res;
     }
 };
