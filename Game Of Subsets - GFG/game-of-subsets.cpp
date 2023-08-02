@@ -14,14 +14,23 @@ private:
     int gcd(long long a, long long b) {
         return (a == 0) ? b : gcd(b % a, a);
     }
+    long long power(long long a, long long b) {
+        long long ans = 1ll;
+        while (b) {
+            if (b & 1) ans = (ans * a) % mod;
+            a = (a * a) % mod;
+            b >>= 1;
+        }
+        return ans;
+    }
     long long solve(int i, long long product, vector<int>& A, map<int, int>& freq) {
         if (i >= A.size()) return (product != 1);
-        long long notPick = solve(i + 1, product, A, freq);
-        long long pick = 0;
+        long long res = solve(i + 1, product, A, freq);
         if (gcd(A[i], product) == 1) {
-            pick = (freq[A[i]] * solve(i + 1, product * A[i], A, freq)) % mod;
+            res += (freq[A[i]] * solve(i + 1, product * A[i], A, freq)) % mod;
+            res %= mod;
         }
-        return (pick + notPick) % mod;
+        return res;
     }
 public:
     int goodSubsets(vector<int> &arr, int n){
@@ -40,8 +49,9 @@ public:
         for (auto &it : freq) {
             A.push_back(it.first);
         }
-        int ans = max(1, freq[1] - 1) * solve(0, 1ll, A, freq);
-        return ans;
+        // cout << freq[1] << endl;
+        long long ans = (power(2, freq[1]) * solve(0, 1, A, freq)) % mod;
+        return ans / (freq[1] + 1);
     }
 };
 
