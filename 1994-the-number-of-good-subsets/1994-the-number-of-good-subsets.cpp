@@ -10,10 +10,10 @@ private:
         }
         return ans;
     }
-    unsigned long long solve(long long i, long long product, unsigned long long factor, map<int, int>& freq) {
+    long long solve(int i, long long product, unsigned long long factor, map<int, int>& freq) {
         if (i > 30) return (product != 1) * factor;
-        unsigned long long res = solve(i + 1, product, factor, freq);
-        if ((i % 4 != 0) && (i % 9 != 0) && (i % 25 != 0) && __gcd(i, product) == 1) {
+        long long res = solve(i + 1, product, factor, freq);
+        if ((i % 4 != 0) && (i % 9 != 0) && (i % 25 != 0) && __gcd(1ll*i, product) == 1) {
             res += (solve(i + 1, product * i, (factor * 1ll * freq[i]) % mod, freq)) % mod;
             res %= mod;
         }
@@ -26,7 +26,7 @@ public:
         for (auto &it : arr) {
             freq[it]++;
         }
-        long long ans = (power(2, freq[1]) * solve(2, 1ll, 1ll, freq)) % mod;
+        int ans = (power(2, freq[1]) * solve(2, 1ll, 1ll, freq)) % mod;
         return (ans + mod) % mod;
     }
 };
