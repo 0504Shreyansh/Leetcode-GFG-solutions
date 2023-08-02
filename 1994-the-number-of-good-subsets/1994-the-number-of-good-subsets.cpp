@@ -14,7 +14,7 @@ private:
         if (i > 30) return (product != 1) * factor;
         unsigned long long res = solve(i + 1, product, factor, freq);
         if ((i % 4 != 0) && (i % 9 != 0) && (i % 25 != 0) && __gcd(i, product) == 1) {
-            res += (solve(i + 1, product * i, factor * 1ll * freq[i] % mod, freq)) % mod;
+            res += (solve(i + 1, product * i, (factor * 1ll * freq[i]) % mod, freq)) % mod;
             res %= mod;
         }
         return res;
