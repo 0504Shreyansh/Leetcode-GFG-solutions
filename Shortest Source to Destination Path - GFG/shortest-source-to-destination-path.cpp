@@ -9,37 +9,33 @@ using namespace std;
 
 class Solution {
   public:
-    int shortestDistance(int n, int m, vector<vector<int>> A, int X, int Y) {
-        
-        if(!A[0][0])
-            return -1;
-        
-        queue<pair<int,int>> q({{0, 0}});
-        int steps = 0;
-        vector<pair<int,int>> dir = {{-1,0}, {1,0}, {0,-1}, {0,1}};
-        vector<vector<int>> vis(n, vector<int> (m));
+    int shortestDistance(int N, int M, vector<vector<int>> A, int X, int Y) {
+        vector<vector<int>> vis(N, vector<int> (M));
+        if (A[0][0] == 0 || A[X][Y] == 0) return -1;
+        queue<pair<int, int>> Q({{0, 0}});
+        vector<pair<int, int>> dir = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
         vis[0][0] = 1;
-        
-        while(q.size()) {
-            int x = q.size();
-            for(int i = 0; i < x; i++) {
-                auto cur = q.front();
-                q.pop();
-                int curRow = cur.first, curCol = cur.second;
-                if(curRow==X && curCol==Y)
-                    return steps;
-                for(int k = 0; k < 4; k++) {
-                    int newRow = curRow + dir[k].first, newCol = curCol + dir[k].second;
-                    if(newRow>=0 && newRow<n && newCol>=0 && newCol<m && A[newRow][newCol] && !vis[newRow][newCol]) {
-                        vis[newRow][newCol] = 1;
-                        q.push({newRow, newCol});
+        int steps = 0;
+        while (Q.size()) {
+            int size = Q.size();
+            while (size--) {
+                auto cur = Q.front();
+                Q.pop();
+                int x = cur.first;
+                int y = cur.second;
+                if (x == X && y == Y) return steps;
+                for (auto v : dir) {
+                    int newX = x + v.first;
+                    int newY = y + v.second;
+                    if (newX >= 0 && newX < N && newY >= 0 && newY < M && !vis[newX][newY] && A[newX][newY]) {
+                        vis[newX][newY] = 1;
+                        Q.push({newX, newY});
                     }
                 }
             }
             steps++;
         }
-        return -1  ;      
-        
+        return -1;
     }
 };
 
