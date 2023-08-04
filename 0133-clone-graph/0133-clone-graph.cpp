@@ -20,23 +20,19 @@ public:
 */
 
 class Solution {
-public:
-    map<Node*,Node*> map;
-    Node* createCloneGraph(Node* node) {
-        if(node==NULL) {
-            return NULL;
-        }
-        // If the copy of the node has not been created, then create.
-        if(map.find(node) == map.end()) {
-            // Create the root node.
-            map[node] = new Node(node->val, {});
-            // Insert its neighbours
-            for(auto neighbour : node->neighbors)
-                map[node]->neighbors.push_back(createCloneGraph(neighbour));
+private:
+    map<Node*, Node*> map;
+    Node* create(Node* node) {
+        if (node == NULL) return NULL;
+        if (map.find(node) != map.end()) return map[node];
+        map[node] = new Node(node->val, {});
+        for (auto &it : node->neighbors) {
+            map[node]->neighbors.push_back(create(it));
         }
         return map[node];
-    }
+    } 
+public:
     Node* cloneGraph(Node* node) {
-        return createCloneGraph(node);
+        return create(node);
     }
 };
