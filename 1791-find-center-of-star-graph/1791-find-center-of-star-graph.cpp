@@ -2,8 +2,8 @@ class Solution {
 public:
     int findCenter(vector<vector<int>>& edges) {
         unordered_map<int, int> A;
-        for (auto &it : edges) {
-            A[it[0]]++, A[it[1]]++;
+        for (int i = 0; i < edges.size(); i++) {
+            A[edges[i][0]]++, A[edges[i][1]]++;
         }
         int deg = 0, node = -1;
         for (auto &it : A) {
