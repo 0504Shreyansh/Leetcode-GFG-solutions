@@ -1,28 +1,46 @@
-class Solution {
-private:
-    void dfs(int u, vector<int> adj[], vector<int>& vis) {
-        vis[u] = 1;
-        for (auto &v : adj[u]) {
-            if (!vis[v]) {
-                dfs(v, adj, vis);
+class DSU {
+public:
+    vector<int> rank;
+    vector<int> par;
+    DSU(int n) {
+        rank.resize(n);
+        par.resize(n);
+        for (int i = 0; i < n; i++) par[i] = i;
+    }
+    int findPar(int u) {
+        return (par[u] == u) ? u : par[u] = findPar(par[u]);
+    }
+    void unite(int u, int v) {
+        u = findPar(u);
+        v = findPar(v);
+        if (u != v) {
+            if (rank[u] < rank[v]) {
+                par[u] = v;
+            } else if (rank[u] > rank[v]) {
+                par[v] = u;
+            } else {
+                rank[u]++;
+                par[v] = u;
             }
         }
     }
+};
+
+class Solution {
 public:
     int makeConnected(int n, vector<vector<int>>& C) {
-        vector<int> adj[n];
+        DSU obj(n);
+        int excess = 0;
         for (auto &it : C) {
-            adj[it[0]].push_back(it[1]);
-            adj[it[1]].push_back(it[0]);
-        }
-        int comp = 0;
-        vector<int> vis(n);
-        for (int i = 0; i < n; i++) {
-            if (!vis[i]) {
-                comp++;
-                dfs(i, adj, vis);
+            if (obj.findPar(it[0]) == obj.findPar(it[1])) {
+                excess++;
             }
+            obj.unite(it[0], it[1]);
         }
-        return (C.size() >= n - 1) ? comp - 1 : -1;
+        int parents = 0;
+        for (int i = 0; i < n; i++) {
+            if (obj.par[i] == i) parents++;
+        }
+        return (C.size() >= n - 1) ? parents - 1 : -1;
     }
 };
