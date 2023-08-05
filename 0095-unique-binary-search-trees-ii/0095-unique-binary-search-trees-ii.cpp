@@ -10,33 +10,31 @@
  * };
  */
 class Solution {
+private:
+    TreeNode* create(int& i, vector<int>& t, int mini, int maxi, bool& done) {
+        if (i == t.size()) done = 1;
+        if (i >= t.size() || t[i] < mini || t[i] > maxi) return NULL;
+        TreeNode* root = new TreeNode(t[i++]);
+        root -> left = create(i, t, mini, root->val, done);
+        root -> right = create(i, t, root->val, maxi, done);
+        return root;
+    }
 public:
-    vector<TreeNode*> res;
-    vector<TreeNode*> solve(int start, int end) {
-        vector<TreeNode*> ans;
-        // All nodes have been taken.
-        if(start > end) {
-            ans.push_back(NULL);
-            return ans;
+    vector<TreeNode*> generateTrees(int n) {
+        vector<int> t;
+        for (int i = 1; i <= n; i++) 
+            t.push_back(i);
+        vector<vector<int>> p({t});
+        while (next_permutation(begin(t),end(t))) {
+            p.push_back(t);
         }
-        for(int i = start; i <= end; i++) {
-            // Recursively create all the possible left and right sub-trees.
-            vector<TreeNode*> leftSubTree = solve(start, i-1);
-            vector<TreeNode*> rightSubTree = solve(i+1, end);
-            for(auto l: leftSubTree) {
-                for(auto r: rightSubTree) {
-                    TreeNode *cur = new TreeNode(i);
-                    cur -> left = l;
-                    cur -> right = r;
-                    // Push the new tree 
-                    ans.push_back(cur);
-                }
-            }
+        vector<TreeNode*> ans;
+        for (auto &it : p) {
+            int i = 0;
+            bool done = 0;
+            TreeNode* cur = create(i, it, INT_MIN, INT_MAX, done);
+            if (done) ans.push_back(cur);
         }
         return ans;
-    }
-    vector<TreeNode*> generateTrees(int n) {
-        // Solve starting from node 1 to n.
-        return solve(1, n);
     }
 };
