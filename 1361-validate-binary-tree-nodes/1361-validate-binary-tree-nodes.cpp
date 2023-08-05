@@ -5,6 +5,7 @@ private:
     }
 public:
     bool validateBinaryTreeNodes(int n, vector<int>& leftChild, vector<int>& rightChild) {
+        // only 1 parent
         vector<int> indegree(n, 0);
         for (int i = 0; i < n; i++) {
             if (leftChild[i] != -1) {
@@ -14,6 +15,7 @@ public:
                 if (++indegree[rightChild[i]] > 1) return false;
             }
         }
+        // only 1 node with no parent
         int root = -1;
         for (int i = 0; i < n; i++) {
             if (indegree[i] == 0) {
@@ -24,6 +26,7 @@ public:
                 }
             }
         }
+        // total nodes must be n
         return count(leftChild, rightChild, root) == n;
     }
 };
