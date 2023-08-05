@@ -1,57 +1,48 @@
-class DisjointSet {
-    public:
-    vector<int> rank, parent, size;
-    DisjointSet(int n) {
-        parent.resize(n);
-        rank.resize(n);
-        size.resize(n);
-        for(int i = 0; i < n; i++)
+class DSU {
+    vector<int> rank;
+    vector<int> parent;
+public:
+    DSU(int n) {
+        rank.resize(26);
+        parent.resize(26);
+        for (int i = 0; i < 26; ++i)
             parent[i] = i;
     }
-    int findParent(int node) {
-        return (parent[node]==node) ? node : parent[node] = findParent(parent[node]);
+    int findPar(int c) {
+        return (parent[c] == c) ? c : (parent[c] = findPar(parent[c]));
     }
-    void unite(int u, int v) {
-        int up = findParent(u), vp = findParent(v);
-        if(up != vp) {
-            if(rank[up] < rank[vp])
-                parent[up] = vp;
-            else if(rank[up] > rank[vp])
-                parent[vp] = up;
-            else {
-                parent[vp] = up;
-                rank[vp]++;
-            }
-        }
-    }
-    void uniteBySize(int u, int v) {
-        int up = findParent(u), vp = findParent(v);
-        if(up != vp) {
-            if(size[up] < size[vp]) {
-                parent[up] = vp;
-                size[vp] += size[up];
-            }
-            else {
-                parent[vp] = up;
-                size[up] += size[vp]; 
+    void unite(int a, int b) {
+        a = findPar(a);
+        b = findPar(b);
+        if (a != b) {
+            if (rank[a] < rank[b]) {
+                parent[a] = b;
+            } else if (rank[a] > rank[b]) {
+                parent[b] = a;
+            } else {
+                rank[b]++;
+                parent[a] = b;
             }
         }
     }
 };
+
 class Solution {
 public:
     bool equationsPossible(vector<string>& equations) {
-        
-        DisjointSet ds(26);
-        
-        for (auto e : equations) 
-            if (e[1]=='=')
-                ds.uniteBySize(e[0]-'a', e[3]-'a');
-        
-        for(auto e : equations) 
-            if(e[1]=='!') 
-                if(ds.findParent(e[0]-'a') == ds.findParent(e[3]-'a'))
+        DSU obj(26);
+        for (auto &it : equations) {
+            if (it[1] == '=') {
+                obj.unite(it[0]-'a', it[3]-'a');
+            }
+        }
+        for (auto &it : equations) {
+            if (it[1] == '!') {
+                if (obj.findPar(it[0] - 'a') == obj.findPar(it[3] - 'a')) {
                     return false;
+                }
+            }
+        }
         return true;
     }
 };
