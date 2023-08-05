@@ -1,35 +1,24 @@
 class Solution {
-public:
-    int res = 0;
-    void dfs(int node, vector<int> adj[], vector<int> &vis) {
-        // Mark as visited
-        vis[node] = 1;
-        for (auto nbr : adj[node]) {
-            // If node is unvisited
-            if (!vis[abs(nbr)]) {
-                // Just count the +ve nodes
-                if(nbr > 0) res++;
-                dfs(abs(nbr), adj, vis);
-            } 
+private:
+    int ans = 0;
+    void dfs(int u, vector<pair<int, int>> adj[], vector<int>& vis) {
+        vis[u] = 1;
+        for (auto &[v, num] : adj[u]) {
+            if (!vis[v]) {
+                if (num == 0) ans++;
+                dfs(v, adj, vis);
+            }
         }
     }
-    int minReorder(int n, vector<vector<int>>& connections) {
-     
-        vector<int> vis(n, 0);
-        vector<int> adj[n];
-        
-        // Directed edge treated as +ve edge and inverse edge as -ve edge
-        for (auto c : connections) { 
-            adj[c[0]].push_back(c[1]);
-            adj[c[1]].push_back(-c[0]);
+public:
+    int minReorder(int n, vector<vector<int>>& C) {
+        vector<pair<int, int>> adj[n];
+        for (auto &it : C) {
+            adj[it[0]].push_back({it[1], 0});
+            adj[it[1]].push_back({it[0], 1});
         }
-        
-        // Start dfs from 0
-        // If the group of nodes can be reached by 0
-        // i.e. we need reorder it (only +ve edges)
-        // So that they reach to 0
+        vector<int> vis(n);
         dfs(0, adj, vis);
-        
-        return res;
+        return ans;
     }
 };
