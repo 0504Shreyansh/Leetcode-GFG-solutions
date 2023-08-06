@@ -34,11 +34,9 @@ public:
         int d = 1e9;
         int ans = -1;
         for (int i = 0; i < n; i++) {
-            if (dist1[i] != 1e9 && dist2[i] != 1e9) {
-                if (d > max(dist1[i], dist2[i])) {
-                    d = max(dist1[i], dist2[i]);
-                    ans = i;
-                }
+            if (d > max(dist1[i], dist2[i])) {
+                d = max(dist1[i], dist2[i]);
+                ans = i;
             }
         }
         return ans;
