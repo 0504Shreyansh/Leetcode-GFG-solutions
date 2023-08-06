@@ -17,7 +17,6 @@ public:
         }
         vector<int> vis(n);
         dfs(0, adj, vis);
-        for (auto &it : vis) cout << it << ' '; cout << endl;
         int ans = 1e5;
         for (int i = 0; i < n; i++) {
             if (vis[i] == 1) {
