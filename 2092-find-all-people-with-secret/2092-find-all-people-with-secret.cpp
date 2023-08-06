@@ -46,7 +46,6 @@ public:
             i--;
         }
         vector<int> ans;
-        int parent = obj.par[0];
         for (int i = 0; i < n; i++) {
             if (obj.findPar(i) == 0) {
                 ans.push_back(i);
