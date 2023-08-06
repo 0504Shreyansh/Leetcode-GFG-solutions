@@ -1,33 +1,27 @@
-#define ll long long
 class Solution {
-public:
-    ll ans = 0; 
-    ll dfs(vector<int>& vis, int node, int seats, vector<int> adj[]){
-        vis[node] = 1; 
-        ll count = 1; 
-        for(auto it : adj[node]){
-            if(!vis[it])
-                count += dfs(vis, it, seats, adj);
+private:
+    int dfs(int node, int par, vector<int> adj[], int& seats, long long &ans) {
+        int cur = 1;
+        for (auto &adjNode : adj[node]) {
+            if (par != adjNode) {
+                cur += dfs(adjNode, node, adj, seats, ans);
+            }
         }
-        
-        ll x = count / seats;
-        if(count % seats) 
-            x++;
-        if(node) 
-            ans += x;
-        return count; 
+        if (node > 0) {
+            ans += (cur + seats - 1) / seats;
+        }
+        return cur;
     }
+public:
     long long minimumFuelCost(vector<vector<int>>& roads, int seats) {
-        int n = roads.size();
-        vector<int> adj[n+1], vis(n+1); 
-        
-        // create adjacency list
-        for(auto it : roads){
+        int n = roads.size() + 1;
+        vector<int> adj[n];
+        for (auto &it : roads) {
             adj[it[0]].push_back(it[1]);
             adj[it[1]].push_back(it[0]);
         }
-        
-        dfs(vis, 0, seats, adj);
+        long long ans = 0;
+        dfs(0, -1, adj, seats, ans);
         return ans;
     }
 };
