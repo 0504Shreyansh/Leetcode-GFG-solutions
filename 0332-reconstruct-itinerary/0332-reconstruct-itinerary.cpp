@@ -1,26 +1,29 @@
 class Solution {
-public:
-    // #define minHeapString <string,vector<string>,greater<string>>
-    vector<string> ans;
-    unordered_map<string,priority_queue<string,vector<string>,greater<string>>> adj;
-    void dfs(string s) {
-        auto &x = adj[s];
-        while(x.size()) {
-            string to = x.top();
-            x.pop();
-            dfs(to);
+private:
+    void dfs(string node, unordered_map<string, vector<string>>& graph, set<pair<string, int>>& seen, stack<string>& st) {
+        for (int i = 0; i < graph[node].size(); i++) {
+            if (seen.count({node, i})) 
+                continue;
+            seen.insert({node, i});
+            dfs(graph[node][i], graph, seen, st);
         }
-        // cout<<s<<endl;
-        ans.push_back(s);
+        st.push(node);
     }
+public:
     vector<string> findItinerary(vector<vector<string>>& tickets) {
-        
-        for(auto e: tickets) 
-            adj[e[0]].push(e[1]);
-        
-        dfs("JFK");
-        reverse(ans.begin(),ans.end());
+        unordered_map<string, vector<string>> graph;
+        for (auto &it : tickets) {
+            graph[it[0]].push_back(it[1]);
+        }
+        for (auto &it : graph) sort(begin(it.second),end(it.second));
+        set<pair<string, int>> seen;
+        stack<string> st;
+        dfs("JFK", graph, seen, st);
+        vector<string> ans;
+        while (st.size()) {
+            ans.push_back(st.top());
+            st.pop();
+        }
         return ans;
-        
     }
 };
