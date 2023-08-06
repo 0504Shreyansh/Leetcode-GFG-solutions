@@ -5,7 +5,6 @@ using namespace std;
 // } Driver Code Ends
 class Solution{
     public:
-    //Complete this function
     void f(int i, vector<string>& ans, string &S) {
         if (i >= S.size()) {
             ans.push_back(S);
