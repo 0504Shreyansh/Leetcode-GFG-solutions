@@ -1,22 +1,20 @@
-class Union {
-    public:
-    vector<int> parent, rank;
-    Union(int n) {
+class DSU {
+public:
+    vector<int> rank;
+    vector<int> par;
+    DSU(int n) {
         rank.resize(n);
-        for(int i = 0; i < n; i++) 
-            parent.push_back(i);
+        par.resize(n);
+        for (int i = 0; i < n; i++) par[i] = i;
     }
-    int findParent(int u) {
-        return (u == parent[u]) ?
-            u : parent[u] = findParent(parent[u]);
+    int findPar(int u) {
+        return (par[u] == u) ? u : par[u] = findPar(par[u]);
     }
-    void unite(int u ,int v) {
-        u = findParent(u);
-        v = findParent(v);
-        if(u != v) {
-            parent[u] = min(u, v);
-            parent[v] = min(u, v);
-        }
+    void unite(int u, int v) {
+        u = findPar(u);
+        v = findPar(v);
+        if (u != v)
+            par[u] = par[v] = min(u, v);
     }
 };
 
@@ -26,34 +24,34 @@ public:
         sort(begin(meetings),end(meetings),[&](auto &a, auto &b) {
             return a[2] < b[2];
         });
-        Union u(n);
-        u.unite(0, firstPerson);
-        for(int i = 0; i < meetings.size(); ) {
+        int m = meetings.size();
+        DSU obj(n);
+        obj.unite(0, firstPerson);
+        for (int i = 0; i < m; i++) {
             int time = meetings[i][2];
             int index = i;
-            // for some time t, unite all people at once to avoid any confusion
-            while(i < meetings.size() && time == meetings[i][2]) {
-                // unite all the peoples
-                u.unite(meetings[i][0], meetings[i][1]);
+            while (i < m && meetings[i][2] == time) {
+                int u = meetings[i][0], v = meetings[i][1];
+                obj.unite(u, v);
                 i++;
             }
-            while(index < i) {
-                int x = meetings[index][0], y = meetings[index][1];
-                // if people are still not aware of the secret
-                if(u.findParent(x) != 0 && u.findParent(y) != 0) {
-                    u.parent[x] = x;
-                    u.parent[y] = y;
+            while (index < i) {
+                int u = meetings[index][0], v = meetings[index][1];
+                if (obj.findPar(u) != 0 && obj.findPar(v) != 0) {
+                    obj.par[u] = u;
+                    obj.par[v] = v;
                 }
                 index++;
             }
+            i--;
         }
-        // store how many people knows the secret
-        vector<int> people;
-        for(int i = 0; i < n; i++) {
-            if(u.findParent(i) == 0) {
-                people.push_back(i);
+        vector<int> ans;
+        int parent = obj.par[0];
+        for (int i = 0; i < n; i++) {
+            if (obj.findPar(i) == 0) {
+                ans.push_back(i);
             }
         }
-        return people;
+        return ans;
     }
 };
