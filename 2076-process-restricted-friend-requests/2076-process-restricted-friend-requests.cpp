@@ -1,29 +1,27 @@
-class DisjointSet {
-    public :
+class DSU {
+public:
     vector<int> rank;
-    vector<int> parent;
-    DisjointSet(int n) {
-        for(int i = 0; i < n; i++) {
-            rank.push_back(1);
-            parent.push_back(i);
-        }
+    vector<int> par;
+    DSU(int n) {
+        rank.resize(n);
+        par.resize(n);
+        for (int i = 0; i < n; i++) par[i] = i;
     }
-    int findParent(int node) {
-        return (parent[node] == node) ? node : parent[node] = findParent(parent[node]);
+    int findPar(int u) {
+        return (par[u] == u) ? u : par[u] = findPar(par[u]);
     }
     void unite(int u, int v) {
-        int up = findParent(u);
-        int vp = findParent(v);
-        if(up == vp) return ;
-        if(rank[up] < rank[vp]) {
-            parent[up] = vp;
-        }
-        else if(rank[vp] > rank[up]) {
-            parent[vp] = up;
-        }
-        else {
-            rank[vp]++;
-            parent[up] = vp;
+        u = findPar(u);
+        v = findPar(v);
+        if (u != v) {
+            if (rank[u] < rank[v]) {
+                par[u] = v;
+            } else if (rank[u] > rank[v]) {
+                par[v] = u;
+            } else {
+                par[u] = v;
+                rank[v]++;
+            }
         }
     }
 };
@@ -31,28 +29,22 @@ class DisjointSet {
 class Solution {
 public:
     vector<bool> friendRequests(int n, vector<vector<int>>& restrictions, vector<vector<int>>& requests) {
-        DisjointSet dsu(n);
         vector<bool> ans;
-        for(auto &req : requests) {
-            int parent1 = dsu.findParent(req[0]);
-            int parent2 = dsu.findParent(req[1]);
-            // Check if the request are restricted or not.
+        DSU obj(n);
+        for (auto &it : requests) {
+            int u = obj.findPar(it[0]), v = obj.findPar(it[1]);
             bool canBeFriends = true;
-            for(auto &res : restrictions) {
-                int parentRestricted1 = dsu.findParent(res[0]);
-                int parentRestricted2 = dsu.findParent(res[1]);
-                // Found restricted
-                if((parent1 == parentRestricted1 && parent2 == parentRestricted2) || (parent1 == parentRestricted2 && parent2 == parentRestricted1)) {
+            for (auto &j : restrictions) {
+                int p1 = obj.findPar(j[0]), p2 = obj.findPar(j[1]);
+                if ((u == p1 && v == p2) || (u == p2 && v == p1)) {
                     canBeFriends = false;
                     break;
                 }
             }
-            // They can now be friends
-            if(canBeFriends) {
-                dsu.unite(req[0], req[1]);
+            if (canBeFriends) {
+                obj.unite(it[0], it[1]);
                 ans.push_back(true);
-            }
-            else {
+            } else {
                 ans.push_back(false);
             }
         }
