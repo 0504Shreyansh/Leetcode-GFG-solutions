@@ -1,69 +1,68 @@
-class DisjointSet {
-    public:
+class DSU {
+public:
     vector<int> rank;
-    vector<int> parent;
-    int components;
-    DisjointSet(int n) {
-        components = n;
-        rank.resize(n+1);
-        for(int i = 0; i <= n; i++) 
-            parent.push_back(i);
+    vector<int> par;
+    DSU(int n) {
+        rank.resize(n);
+        for (int i = 0; i < n; i++) 
+            par.push_back(i);
     }
-    int findParent(int u) {
-        return (u==parent[u]) ? u : parent[u] = findParent(parent[u]);
+    int findPar(int u) {
+        return (par[u] == u) ? u : par[u] = findPar(par[u]);
     }
-    int unite(int u, int v) {
-        int up = findParent(u);
-        int vp = findParent(v);
-        if(up != vp) {
-            if(rank[up] < rank[vp])
-                parent[up] = vp;
-            else if(rank[up] > rank[vp])
-                parent[vp] = up;
-            else {
-                parent[up] = vp;
-                rank[up]++;
+    void unite(int u, int v) {
+        u = findPar(u);
+        v = findPar(v);
+        if (u != v) {
+            if (rank[u] < rank[v]) {
+                par[u] = v;
+            } else if (rank[u] > rank[v]) {
+                par[v] = u;
+            } else {
+                rank[v]++;
+                par[u] = v;
             }
-            components--;
-            return 1;
         }
-        return 0;
     }
-    bool isConnected() {
-        return (components == 1);
+    int comp() {
+        int comps = 0;
+        for (int i = 0; i < par.size(); i++) {
+            comps += (par[i] == i);
+        }
+        return comps == 1;
     }
 };
 
 class Solution {
 public:
     int maxNumEdgesToRemove(int n, vector<vector<int>>& edges) {
-        // Create 2 different graphs
-        DisjointSet Alice(n), Bob(n);
-        int requiredEdges = 0;
-        // Give priority to the type 3 edges first
-        // Make graph using the type 3 edges
-        for(auto edge : edges) {
-            if(edge[0] == 3) {
-                requiredEdges += Alice.unite(edge[1], edge[2]) 
-                    | Bob.unite(edge[1], edge[2]);
+        DSU alice(n), bob(n);
+        sort(rbegin(edges),rend(edges));
+        int ans = 0;
+        for (int i = 0; i < edges.size(); i++) {
+            int u = edges[i][1] - 1, v = edges[i][2] - 1;
+            if (edges[i][0] == 1) {
+                if (alice.findPar(u) != alice.findPar(v)) {
+                    alice.unite(u, v);
+                } else {
+                    ans++;
+                }
+            } else if (edges[i][0] == 2) {
+                if (bob.findPar(u) != bob.findPar(v)) {
+                    bob.unite(u, v);
+                } else {
+                    ans++;
+                }
+            } else {
+                if (alice.findPar(u) != alice.findPar(v) ||
+                        bob.findPar(u) != bob.findPar(v)) {
+                    alice.unite(u, v);
+                    bob.unite(u, v);
+                } else {
+                    ans++;
+                }
             }
         }
-        // Then try including other edegs
-        // If they are not in the same component then increment counter
-        for(auto edge : edges) {
-            if(edge[0] == 1) {
-                requiredEdges += Alice.unite(edge[1], edge[2]);
-            }
-            else if(edge[0] == 2) {
-                requiredEdges += Bob.unite(edge[1], edge[2]);
-            }
-        }
-        
-        if(Alice.isConnected() && Bob.isConnected()) {
-            return edges.size() - requiredEdges;
-        }
-        
-        // Both have 1 components each, then only possile to remove some edges
-        return -1;
+        return (alice.comp() == 1 && bob.comp() == 1) ? ans : -1;
     }
 };
