@@ -1,48 +1,45 @@
-// Use disjoint set to dynamically create the graph
-class DisjointSet {
-    public:
-    vector<int> parent;
-    DisjointSet(int n) {
-        for(int i = 0; i <= n; i++)
-            parent.push_back(i);
+class DSU {
+public:
+    vector<int> rank, par;
+    DSU(int n) {
+        rank.resize(n);
+        par.resize(n);
+        for (int i = 0; i < n; i++) par[i] = i;
     }
-    int findParent(int u) {
-        return (u == parent[u]) ? u : parent[u] = findParent(parent[u]);
+    int findPar(int u) {
+        return (par[u] == u) ? u : par[u] = findPar(par[u]);
     }
     void unite(int u, int v) {
-        parent[findParent(u)] = findParent(v);
+        par[findPar(u)] = findPar(v);
+    }
+    bool inComponent(int u, int v) {
+        return findPar(u) == findPar(v);
     }
 };
 
 class Solution {
 public:
     vector<bool> distanceLimitedPathsExist(int n, vector<vector<int>>& edgeList, vector<vector<int>>& queries) {
-        
-        // Push back the idx to not loose the track of their original position
-        for(int i = 0; i < queries.size(); i++)
+        int q = queries.size();
+        int m = edgeList.size();
+        int j = 0;
+        for (int i = 0; i < q; i++) {
             queries[i].push_back(i);
-        
-        // Sort on the basis of the least weighted edges
-        sort(begin(queries),end(queries),[&](auto&a, auto&b){return a[2]<b[2];});
-        sort(begin(edgeList),end(edgeList),[&](auto&a, auto&b){return a[2]<b[2];});
-        
-        DisjointSet dsu(n);
-        vector<bool> ans(queries.size());
-        
-        // Keep pointer i as global to keep creating the graph 
-        // with the smaller wts as compared to query's weight limit
-        int i = 0;
-        for(auto q : queries) {
-            int u = q[0], v = q[1], wt = q[2], idx = q[3];            
-            // Create the graph with edges having smaller wts than the weight limit
-            while(i < edgeList.size() && edgeList[i][2] < wt) {
-                dsu.unite(edgeList[i][0], edgeList[i][1]);
-                i++;
+        }
+        sort(begin(edgeList),end(edgeList),[&](auto &a, auto &b){return a[2] < b[2];});
+        sort(begin(queries),end(queries),[&](auto &a, auto &b){return a[2] < b[2];});
+        vector<bool> ans(q);
+        DSU obj(n);
+        for (int i = 0; i < q; ++i) {
+            int u = queries[i][0];
+            int v = queries[i][1];
+            int maxLimit = queries[i][2];
+            int index = queries[i][3];
+            while (j < m && edgeList[j][2] < maxLimit) {
+                obj.unite(edgeList[j][0], edgeList[j][1]);
+                j++;
             }
-            // One thing can be concluded here 
-            // If they belong to one component, they will definitely have smaller wts
-            //*Bcoz we are only inserting the edges which have samller than this wt limit.
-            ans[idx] = (dsu.findParent(u) == dsu.findParent(v)) ? true : false;
+            ans[index] = (obj.inComponent(u, v));
         }
         return ans;
     }
