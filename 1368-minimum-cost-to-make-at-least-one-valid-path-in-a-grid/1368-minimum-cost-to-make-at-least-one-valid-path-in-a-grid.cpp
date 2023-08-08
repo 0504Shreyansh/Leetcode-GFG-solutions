@@ -26,11 +26,11 @@ public:
             int x = cur -> x;
             int y = cur -> y;
             int cost = cur -> cost;
+            if (x == n - 1 && y == m - 1) 
+                return cost;
             if (seen.count({x, y})) 
                 continue;
             seen.insert({x, y});
-            if (x == n - 1 && y == m - 1) 
-                return cost;
             for (int k = 0; k < 4; k++) {
                 int X = x + dirs[k], Y = y + dirs[k + 1];
                 if (X >= 0 && X < n && Y >= 0 && Y < m) {
