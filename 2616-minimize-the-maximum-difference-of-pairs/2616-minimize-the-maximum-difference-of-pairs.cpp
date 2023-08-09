@@ -14,7 +14,7 @@ private:
 public:
     int minimizeMax(vector<int>& A, int p) {
         sort(begin(A),end(A));
-        int ans = 1e9+1;
+        int ans = A.back() - A[0] + 1;
         int low = 0;
         int high = A.back() - A[0];
         while (low <= high) {
@@ -26,6 +26,6 @@ public:
                 low = mid + 1;
             }
         }
-        return (ans == 1e9+1) ? 0 : ans;
+        return (ans == A.back() - A[0] + 1) ? 0 : ans;
     }
 };
