@@ -9,65 +9,36 @@
  */
 class Codec {
 public:
+
     // Encodes a tree to a single string.
     string serialize(TreeNode* root) {
-        // Level order built of the string
-        queue<TreeNode*> Q({root});
-        string ans;
-        while(Q.size()) {
-            int size = Q.size();
-            while(size--) {
-                TreeNode *curr = Q.front();
-                Q.pop();
-                if(curr) {
-                    ans += to_string(curr -> val) + ",";
-                } else {
-                    ans += ("#,");
-                    continue;
-                }
-                Q.push(curr -> left);
-                Q.push(curr -> right);
-            }
-        }
-        ans.pop_back();
-        return ans;
+        if (root == nullptr) return "#";
+        string res = to_string(root->val);
+        string l = serialize(root -> left);
+        string r = serialize(root -> right);
+        return (res + "," + l + "," + r);
     }
 
     // Decodes your encoded data to tree.
-    TreeNode* deserialize(string data) {
-        if(data[0] == '#') {
+    TreeNode* build(vector<string>& nodes, int& i) {
+        if (nodes[i] == "#") {
+            i++;
             return NULL;
         }
-       
-        // Extract every node to be built level order wise
+        TreeNode* root = new TreeNode(stoi(nodes[i++]));
+        root -> left = build(nodes, i);
+        root -> right = build(nodes, i);
+        return root;
+    }
+    TreeNode* deserialize(string data) {
         stringstream ss(data);
         string word;
         vector<string> nodes;
-        while(std::getline(ss, word, ',')) {
+        while (std::getline(ss, word, ',')) {
             nodes.push_back(word);
         }
-        
-        int i = 1;
-        TreeNode *root = new TreeNode(stoi(nodes[0]));
-        queue<TreeNode*> Q({root});
-        while(Q.size()) {
-            int size = Q.size();
-            while(size--) {
-                TreeNode *curr = Q.front();
-                Q.pop();
-                if(nodes[i] != "#") {
-                    curr -> left = new TreeNode(stoi(nodes[i]));
-                    Q.push(curr -> left);
-                } 
-                i++;
-                if(nodes[i] != "#") {
-                    curr -> right = new TreeNode(stoi(nodes[i]));
-                    Q.push(curr -> right);
-                }
-                i++;
-            }
-        }
-        return root;
+        int i = 0;
+        return build(nodes, i);
     }
 };
 
