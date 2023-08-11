@@ -14,18 +14,18 @@ class Solution {
     }
   public:
     long long int count(int coins[], int N, int sum) {
-        vector<vector<long long>> dp(N+1, vector<long long> (sum+1, 0));
-        
-        dp[N][0] = 1;
+        vector<long long> dp(sum+1, 0), prev(sum+1, 0);
+        prev[0] = 1;
         for (int i = N-1; i >= 0; i--) {
             for (int j = 0; j <= sum; j++) {
-                long long notPick = dp[i + 1][j];
+                long long notPick = prev[j];
                 long long pick = 0;
-                if (j >= coins[i]) pick = dp[i][j - coins[i]];
-                dp[i][j] = pick + notPick;
+                if (j >= coins[i]) pick = dp[j - coins[i]];
+                dp[j] = pick + notPick;
             }
+            prev = dp;
         }
-        return dp[0][sum];
+        return dp[sum];
     }
 };
 
