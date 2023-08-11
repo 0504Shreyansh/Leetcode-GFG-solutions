@@ -4,14 +4,6 @@ using namespace std;
 
 // } Driver Code Ends
 class Solution {
-  private:
-    long long solve(int i, int coins[], int N, int sum) {
-        if (i >= N) return (sum == 0);
-        long long notPick = solve(i + 1, coins, N, sum);
-        long long pick = 0;
-        if (sum >= coins[i]) pick = solve(i, coins, N, sum - coins[i]);
-        return pick + notPick;
-    }
   public:
     long long int count(int coins[], int N, int sum) {
         vector<long long> dp(sum+1, 0), prev(sum+1, 0);
