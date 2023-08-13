@@ -4,50 +4,41 @@ using namespace std;
 
 // } Driver Code Ends
 
-
 class SGTree {
-    vector<int> sgt;
-    public:
+public:
+    vector<int> sg;
     SGTree(int n) {
-        sgt.resize(4 * n);
+        sg.resize(4 * n);
     }
-    void build(int index, int low, int high, vector<int>& arr) {
-        if(low == high) {  // base case reached the last node
-            sgt[index] = arr[low];
+    void build(int low, int high, int index, vector<int>& A) {
+        if (low == high) {
+            sg[index] = A[low];
             return ;
         }
         int mid = (low + high) / 2;
-        build(2 * index + 1, low, mid, arr);  // build left
-        build(2 * index + 2, mid + 1, high, arr);  // build right
-        sgt[index] = (sgt[2 * index + 1] ^ sgt[2 * index + 2]);
+        build(low, mid, 2 * index + 1, A);
+        build(mid + 1, high, 2 * index + 2, A);
+        sg[index] = (sg[2 * index + 1] ^ sg[2 * index + 2]);
     }
-    int query(int index, int l, int r, int low, int high) {
-        if(l > high || low > r) return 0;  // out of range
-        if(l <= low && high <= r) return sgt[index];  // found inside the range
-        int mid = (low + high) / 2;
-        int left = query(2 * index + 1, l, r, low, mid);
-        int right = query(2 * index + 2, l, r, mid + 1, high);
-        return (left ^ right);
-    }   
-    void update(int index, int i, int val, int low, int high) {
-        if(low == high) {    // found the index 
-            sgt[index] = val;
-            return ;
+    int query(int low, int high, int l, int r, int index, vector<int>& A) {
+        if (l <= low && high <= r) {
+            return sg[index];
+        }
+        if (high < l || r < low) {
+            return 0;
         }
         int mid = (low + high) / 2;
-        if(i <= mid) update(2 * index + 1, i, val, low, mid);
-        else update(2 * index + 2, i, val, mid + 1, high);
-        sgt[index] = (sgt[2 * index + 1] ^ sgt[2 * index + 2]);
+        return (query(low, mid, l, r, 2 * index + 1, A) ^ query(mid + 1, high, l, r, 2 * index + 2, A));
     }
 };
 
 class Solution{
     public:
-    int getXor(vector<int>&nums, int a, int b){
-        int n = nums.size();
-        SGTree sg(n);
-        sg.build(0, 0, n - 1, nums);
-        return sg.query(0, a, b, 0, n - 1);
+    int getXor(vector<int>&A, int a, int b){
+        int n = A.size();
+        SGTree obj(n);
+        obj.build(0, n - 1, 0, A);
+        return obj.query(0, n - 1, a, b, 0, A);
     }
 };
 
