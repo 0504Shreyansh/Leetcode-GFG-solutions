@@ -24,10 +24,8 @@ class Solution{
             if (cnt0 - cnt1 > diff) {
                 r = j, l = i;
                 diff = cnt0 - cnt1;
-                // cout << i << ' ' << j << ' ' << cnt0 << ' ' << cnt1 << endl;
             }
         }
-        // cout << l << ' ' << r << endl;
         int ans = 0;
         for (int i = 0; i < n; i++) {
             if (l <= i && i <= r) {
