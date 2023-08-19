@@ -50,19 +50,20 @@ public:
         // Check for critical and p_critical
         vector<vector<int>> ans(2);
         for (int i = 0; i < m; i++) {
-            int new_MST_wt = 0;
+            int critical_wt = 0;
             DisjointSet _obj(n);
             for (int j = 0; j < m; j++) {
                 if (i == j) continue;
                 if (_obj.unite(edges[j][0], edges[j][1])) {
-                    new_MST_wt += edges[j][2];
+                    critical_wt += edges[j][2];
                 }
             }
             
             // incomplete graph or mst_wt increase
-            if (_obj.maxSize < n || new_MST_wt > MST_wt) {
+            if (_obj.maxSize < n || critical_wt > MST_wt) {
                 ans[0].push_back(edges[i][3]);
             } else {
+                // create forced graph
                 int forcedWt = edges[i][2];
                 DisjointSet ob(n);
                 ob.unite(edges[i][0], edges[i][1]);
