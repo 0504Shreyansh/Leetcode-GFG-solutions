@@ -63,6 +63,7 @@ public:
             }
         }
         
+        // sort the items on the basis of their group toposort
         vector<int> ans;
         for (auto &j : Group) {
             for (auto &it : itemGroup[j]) {
