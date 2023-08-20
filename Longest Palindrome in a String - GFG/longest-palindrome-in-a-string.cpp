@@ -6,32 +6,21 @@ using namespace std;
 // } Driver Code Ends
 class Solution {
   public:
-    string longestPalin(string s) {
+    string longestPalin (string s) {
+        int start = 0, len = 1;
         int n = s.size();
-        int start = -1;
-        int len = 0;
-        for(int i = 0 ; i < n; i++) {
-            int odd_start = i, odd_end = i;
-            int oddLength = 1;
-            while(odd_start - 1 >= 0 && odd_end + 1 < n && s[odd_start - 1] == s[odd_end + 1]) {
-                odd_start--;
-                odd_end++;
-                oddLength += 2;
+        for (int i = 0; i < n; i++) {
+            int l = i, h = i;
+            while (l >= 0 && h < n && s[l] == s[h]) l--, h++;
+            if (h - l - 1 > len) {
+                start = l + 1;
+                len = h - l - 1;
             }
-            if(len < oddLength) {
-                len = oddLength;
-                start = odd_start;
-            }
-            int even_start = i, even_end = i + 1;
-            int evenLength = 0;
-            while(even_start >= 0 && even_end < n && s[even_start] == s[even_end]) {
-                even_start--;
-                even_end++;
-                evenLength += 2;
-            }
-            if(len < evenLength) {
-                len = evenLength;
-                start = even_start + 1;
+            l = i, h = i + 1;
+            while (l >= 0 && h < n && s[l] == s[h]) l--, h++;
+            if (h - l - 1 > len) {
+                start = l + 1;
+                len = h - l - 1;
             }
         }
         return s.substr(start, len);
