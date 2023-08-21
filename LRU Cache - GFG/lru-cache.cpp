@@ -11,7 +11,8 @@ public:
     int key, value;
     DLL *next, *prev;
     DLL(int _key, int _value) {
-        key = _key, value = _value;
+        key = _key;
+        value = _value;
         next = prev = NULL;
     }
 };
@@ -22,29 +23,42 @@ class LRUCache
     unordered_map<int, DLL*> m;
     DLL *head = new DLL({-1, -1});
     DLL *tail = new DLL({-1, -1});
+    
     void addNode(DLL* node) {
-        DLL *nextNode = head -> next;
+        node -> next = head -> next;
+        head -> next -> prev = node;
         head -> next = node;
         node -> prev = head;
-        node -> next = nextNode;
-        nextNode -> prev = node;
     }
     
-    void removeNode(DLL *node) {
-        node -> next -> prev = node -> prev;
+    void removeNode(DLL* node) {
         node -> prev -> next = node -> next;
+        node -> next -> prev = node -> prev;
     }
     public:
     //Constructor for initializing the cache capacity with the given value.
-    int CAP;
+    int C;
     LRUCache(int cap)
     {
-        CAP = cap;
+        C = cap;
         head -> next = tail;
         tail -> prev = head;
     }
     
-    //Function to return value corresponding to the key.
+    void SET(int key, int value) {
+        if (m.find(key) != m.end()) {
+            removeNode(m[key]);
+            m.erase(key);
+        }
+        if (m.size() == C) {
+            DLL* node = m[tail -> prev -> key];
+            m.erase(node -> key);
+            removeNode(tail -> prev);
+        }
+        addNode(new DLL(key, value));
+        m[key] = head -> next;
+    }
+    
     int GET(int key) {
         if (m.find(key) == m.end()) {
             return -1;
@@ -55,22 +69,6 @@ class LRUCache
         addNode(node);
         m[key] = head -> next;
         return ans;
-    }
-    
-    //Function for storing key-value pair.
-    void SET(int key, int value) {
-        if (m.find(key) != m.end()) {
-            DLL* node = m[key];
-            removeNode(node);
-            m.erase(key);
-        }
-        if (m.size() == CAP) {
-            DLL* node = tail -> prev;
-            m.erase(node -> key);
-            removeNode(node);
-        }
-        addNode(new DLL(key, value));
-        m[key] = head -> next;
     }
 };
 
