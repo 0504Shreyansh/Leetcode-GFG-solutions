@@ -8,7 +8,6 @@ public:
 	vector<pair<int, int>> dir = {{-1, -1}, {-1, 0}, 
 	    {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}};
     bool dfs(int i, int j, int& k, vector<vector<char>>& grid, int index, string& word) {
-        // cout << i << ' ' << j << endl;
         if (index >= word.size()) {
             return true;
         }
