@@ -20,13 +20,6 @@ public:
                 commonSpace = 1;
                 extraSpace = 0;
             }
-            // cout << "I -> " << i << endl;
-            // cout << "J -> " << j << endl;
-            // cout << "lettersCount -> " << lettersCount << endl;
-            // cout << "spaces -> " << spaces << endl;
-            // cout << "leftSpaces -> " << leftSpaces << endl;
-            // cout << "commonSpace -> " << commonSpace << endl;
-            // cout << "extraSpace -> " << extraSpace << endl;
             string res;
             for (int k = i; k < j; k++) {
                 res += words[k];
