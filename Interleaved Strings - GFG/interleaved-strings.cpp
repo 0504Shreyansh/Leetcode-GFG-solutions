@@ -32,12 +32,12 @@ class Solution{
         vector<vector<int>> dp(n + 1, vector<int> (m + 1, -1));
         // return solve(n, m, A, B, C, dp);
         
-        for (int j = 0; j < m; j++) {
-            dp[0][j] = (B.substr(0, j) == C.substr(0, j));
-        }
-        for (int i = 0; i < n; i++) {
-            dp[i][0] = (A.substr(0, i) == C.substr(0, i));
-        }
+        // for (int j = 0; j < m; j++) {
+        //     dp[0][j] = (B.substr(0, j) == C.substr(0, j));
+        // }
+        // for (int i = 0; i < n; i++) {
+        //     dp[i][0] = (A.substr(0, i) == C.substr(0, i));
+        // }
         for (int i = 1; i <= n; i++) {
             for (int j = 1; j <= m; j++) {
                 bool ans = false;
