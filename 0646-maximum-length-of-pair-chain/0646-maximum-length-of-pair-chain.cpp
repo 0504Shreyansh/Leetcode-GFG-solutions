@@ -1,19 +1,34 @@
 class Solution {
-public:
-    int findLongestChain(vector<vector<int>>& pairs) {
-        // Sort according to the second parameter
-        sort(begin(pairs),end(pairs),[&](auto &a, auto &b) {
-            if(a[1] != b[1]) return a[1] < b[1];
-            return a[0] < b[0];
-        });
-        int N = pairs.size();
-        int ans = 1, end = pairs[0][1];
-        for(int i = 1; i < N; i++) {
-            if(end < pairs[i][0]) {
-                ans++;
-                end = pairs[i][1];
+private:
+    int findNextIndex(int i, vector<vector<int>>& P) {
+        int low = i + 1, high = P.size() - 1;
+        int idx = high + 1;
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            if (P[i][1] < P[mid][0]) {
+                idx = mid;
+                high = mid - 1;
+            } else {
+                low = mid + 1;
             }
         }
-        return ans;
+        return idx;
+    }
+    int solve(int i, vector<vector<int>>& P, vector<int>& dp) {
+        if (i >= P.size()) return 0;
+        if (dp[i] != -1) return dp[i];
+        int nextIdx = findNextIndex(i, P);
+        int notPick = solve(i + 1, P, dp);
+        int pick = 1 + solve(nextIdx, P, dp);
+        return dp[i] = max(pick, notPick);
+    }
+public:
+    int findLongestChain(vector<vector<int>> pairs) {
+        vector<vector<int>> P(pairs);
+        sort(begin(P), end(P), [&](auto &a, auto &b) {
+            return a[0] < b[0];
+        });
+        vector<int> dp(P.size(), -1);
+        return solve(0, P, dp);
     }
 };
