@@ -14,7 +14,6 @@ private:
         if (idx3 < n && idx3 > i && stones[idx3] == stones[i] + prevSteps + 1) ans |= solve(idx3, prevSteps + 1, stones);
         return m[i][prevSteps] = ans;
     }
-
 public:
     bool canCross(vector<int> stones) {
         if (stones[1] != 1) return false;
