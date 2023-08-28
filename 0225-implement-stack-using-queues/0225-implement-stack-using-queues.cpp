@@ -11,7 +11,7 @@ public:
     
     int pop() {
         int size = q.size();
-        while (--size) {
+        for (int i = 0; i < size - 1; i++) {
             q.push(q.front());
             q.pop();
         }
@@ -22,7 +22,7 @@ public:
     
     int top() {
         int size = q.size();
-        while (--size) {
+        for (int i = 0; i < size - 1; i++) {
             q.push(q.front());
             q.pop();
         }
