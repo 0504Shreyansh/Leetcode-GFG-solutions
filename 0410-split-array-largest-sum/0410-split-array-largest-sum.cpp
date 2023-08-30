@@ -1,30 +1,33 @@
 class Solution {
-public:
-    bool isPossible(int mid, vector<int>& nums, int k) {
+private:
+    bool isPossible(int mid, int k, vector<int>& nums) {
         int cnt = 1;
-        int amount = 0;
-        for(auto &it : nums) {
-            if(amount + it <= mid) {
-                amount += it;
+        int sum = 0;
+        for (auto &it : nums) {
+            if (sum + it <= mid) {
+                sum += it;
             } else {
                 cnt++;
-                if(cnt > k) return false;
-                if(it > mid) return false;
-                amount = it;
+                sum = it;
+                if (it > mid || cnt > k) {
+                    return false;
+                }
             }
         }
         return true;
     }
+public:
     int splitArray(vector<int>& nums, int k) {
-        int sum = 0;
-        for(auto &it : nums)
-            sum += it;
-        int low = 0;
-        int high = sum;
-        int res = sum;
-        while(low <= high) {
-            int mid = (low + high) >> 1;
-            if(isPossible(mid, nums, k)) {
+        int n = nums.size();
+        int low = nums[0];  
+        int high = 0;
+        for (auto &it : nums) {
+            high += it;
+        }
+        int res = high;
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            if (isPossible(mid, k, nums)) {
                 res = mid;
                 high = mid - 1;
             } else {
