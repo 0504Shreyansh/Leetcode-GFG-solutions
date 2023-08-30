@@ -1,31 +1,25 @@
-class DisjointSet {
-    public: 
-    vector<int> rank, parent;
-    DisjointSet(int n) {
-        for(int i = 0; i < n; i++) {
-            parent.push_back(i);
-            rank.push_back(1);
-        }
+class DSU {
+public:
+    vector<int> size;
+    vector<int> par;
+    DSU(int n) {
+        size.resize(n, 1);
+        for (int i = 0; i < n; i++) 
+            par.push_back(i);
     }
-    int findParent(int node) {
-        return (node==parent[node]) ? 
-            node : parent[node]=findParent(parent[node]);
+    int findPar(int u) {
+        return (par[u] == u) ? u : par[u] = findPar(par[u]);
     }
-    void unite(int u, int v) {
-        int up = findParent(u);
-        int vp = findParent(v);
-        if(up != vp) {
-            if(rank[up] < rank[vp]) {
-                rank[vp] += rank[up];
-                parent[up] = vp;
-            }
-            else if(rank[up] > rank[vp]) {
-                rank[up] += rank[vp];
-                parent[vp] = up;
-            }
-            else {
-                rank[vp] += rank[up];
-                parent[up] = vp; 
+    void unite(int u ,int v) {
+        u = findPar(u);
+        v = findPar(v);
+        if (u != v) {
+            if (size[u] <= size[v]) {
+                size[v] += size[u];
+                par[u] = v;
+            } else {
+                size[u] += size[v];
+                par[v] = u;
             }
         }
     }
@@ -34,34 +28,29 @@ class DisjointSet {
 class Solution {
 public:
     int largestComponentSize(vector<int>& nums) {
-        int n = nums.size();
-        unordered_map<int,vector<int>> factors;
-        for(int i = 0; i < n; i++) {
+        unordered_map<int, vector<int>> factors;
+        for (int i = 0; i < nums.size(); i++) {
             int num = nums[i];
-            for(int j = 2; j * j <= num; j++) {
-                if(num % j == 0) {
+            for (int j = 2; j * j <= num; j++) {
+                if (num % j == 0) {
                     factors[j].push_back(i);
-                    while(num % j == 0)
+                    while (num % j == 0) 
                         num /= j;
                 }
             }
-            if(num > 1) {
-                factors[num].push_back(i);
+            if (num > 1) factors[num].push_back(i);
+        } 
+        DSU obj(nums.size());
+        for (auto &it : factors) {
+            int par = it.second[0];
+            for (int &j : it.second) {
+                obj.unite(par, j);
             }
         }
-
-        DisjointSet dsu(n);
-        for(auto &it : factors) {
-            vector<int> indices = it.second;     
-            for(int i = 0; i < indices.size() - 1; i++) {
-                dsu.unite(indices[i], indices.back());
-            }
+        int largestComp = 1;
+        for (auto &it : obj.size) {
+            largestComp = max(largestComp, it);
         }
-
-        int largestComponent = 1;
-        for(auto &curr_size : dsu.rank) {
-            largestComponent = max(largestComponent, curr_size);
-        }
-        return largestComponent;
+        return largestComp;
     }
 };
