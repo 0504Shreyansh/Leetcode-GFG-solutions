@@ -21,18 +21,18 @@ public:
 
 class Solution {
 private:
-    map<Node*, Node*> map;
-    Node* create(Node* node) {
+    map<Node*, Node*> mp;
+    Node* build(Node* node) {
         if (node == NULL) return NULL;
-        if (map.find(node) != map.end()) return map[node];
-        map[node] = new Node(node->val, {});
-        for (auto &it : node->neighbors) {
-            map[node]->neighbors.push_back(create(it));
+        if (mp.find(node) != mp.end()) return mp[node];
+        mp[node] = new Node(node -> val, {});
+        for (auto &it : node -> neighbors) {
+            mp[node] -> neighbors.push_back(build(it));
         }
-        return map[node];
-    } 
+        return mp[node];
+    }
 public:
     Node* cloneGraph(Node* node) {
-        return create(node);
+        return build(node);
     }
 };
