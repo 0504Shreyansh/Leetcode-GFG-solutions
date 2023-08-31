@@ -2,21 +2,22 @@ class Solution {
 public:
     int maxStarSum(vector<int>& vals, vector<vector<int>>& edges, int k) {
         int n = vals.size();
-        priority_queue<int> adj[n];
+        vector<priority_queue<int>> G(n);
         for (auto &it : edges) {
-            adj[it[0]].push(vals[it[1]]);
-            adj[it[1]].push(vals[it[0]]);
+            G[it[1]].push(vals[it[0]]);
+            G[it[0]].push(vals[it[1]]);
         }
-        int ans = INT_MIN;
+        int res = -1e9;
         for (int i = 0; i < n; i++) {
-            int K = k;
+            priority_queue<int> pq = G[i];
+            int size = k;
             int cur = vals[i];
-            while (adj[i].size() && adj[i].top() > 0 && K--) {
-                cur += adj[i].top();
-                adj[i].pop();
+            while (size-- && pq.size() && pq.top() > 0) {
+                cur += pq.top();
+                pq.pop();
             }
-            ans = max(ans, cur);
+            res = max(res, cur);
         }
-        return ans;
+        return res;
     }
 };
