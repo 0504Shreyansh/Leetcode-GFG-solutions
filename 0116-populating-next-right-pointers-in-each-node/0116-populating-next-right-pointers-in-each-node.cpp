@@ -19,28 +19,18 @@ public:
 class Solution {
 public:
     Node* connect(Node* root) {
-        
-        Node *head = root;
-        if(!head) return head;
+        if (!root) return root;
         queue<Node*> q({root});
-        // q.push(NULL);
-        
-        while(q.size()) {
-            int n = q.size();
-            q.push(NULL);
-            while(n--) {
-                Node *cur = q.front();
+        while (q.size()) {
+            int size = q.size();
+            for (int i = 0; i < size; i++) {
+                Node* cur = q.front();
                 q.pop();
-                // Make next link to the neighbour
-                cur->next = q.front();
-                if(cur->left)
-                    q.push(cur->left);
-                if(cur->right)
-                    q.push(cur->right);
-            }
-            q.pop();
+                cur -> next = (i != size - 1) ? q.front() : NULL;
+                if (cur -> left) q.push(cur -> left);
+                if (cur -> right) q.push(cur -> right);
+             }
         }
-        
-        return head;
+        return root;
     }
 };
