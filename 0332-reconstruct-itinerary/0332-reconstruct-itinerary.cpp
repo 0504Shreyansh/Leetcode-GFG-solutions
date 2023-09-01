@@ -1,29 +1,31 @@
 class Solution {
 private:
-    void dfs(string node, unordered_map<string, vector<string>>& graph, set<pair<string, int>>& seen, stack<string>& st) {
-        for (int i = 0; i < graph[node].size(); i++) {
-            if (seen.count({node, i})) 
-                continue;
-            seen.insert({node, i});
-            dfs(graph[node][i], graph, seen, st);
+    void dfs(string u, unordered_map<string, vector<string>>& G, map<pair<string, int>, bool>& visit, stack<string>& st) {
+        for (int i = 0; i < G[u].size(); i++) {
+            if (!visit[{u, i}]) {
+                visit[{u, i}] = 1;
+                dfs(G[u][i], G, visit, st);
+            }
         }
-        st.push(node);
+        st.push(u);
     }
 public:
     vector<string> findItinerary(vector<vector<string>>& tickets) {
-        unordered_map<string, vector<string>> graph;
+        unordered_map<string, vector<string>> G;
         for (auto &it : tickets) {
-            graph[it[0]].push_back(it[1]);
+            G[it[0]].push_back(it[1]);
         }
-        for (auto &it : graph) sort(begin(it.second),end(it.second));
-        set<pair<string, int>> seen;
+        for (auto &it : G) {
+            sort(begin(it.second), end(it.second));
+        }
+        map<pair<string, int>, bool> visit;
         stack<string> st;
-        dfs("JFK", graph, seen, st);
-        vector<string> ans;
+        dfs("JFK", G, visit, st);
+        vector<string> answer;
         while (st.size()) {
-            ans.push_back(st.top());
+            answer.push_back(st.top());
             st.pop();
         }
-        return ans;
+        return answer;
     }
 };
