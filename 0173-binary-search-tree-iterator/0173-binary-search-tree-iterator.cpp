@@ -21,10 +21,7 @@ private:
     }
 public:
     BSTIterator(TreeNode* root) {
-        while (root) {
-            st.push(root);
-            root = root -> left;
-        }
+        pushLeft(root);
     }
     
     int next() {
