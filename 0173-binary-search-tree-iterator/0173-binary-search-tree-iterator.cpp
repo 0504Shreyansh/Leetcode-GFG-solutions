@@ -10,46 +10,32 @@
  * };
  */
 class BSTIterator {
-public:
-    vector<int> nodes;
-    int index = 0;
-    void morrisTraversal(TreeNode* root) {
-        if(!root) return ;
-        TreeNode* curr = root, *pre;
-        while(curr) {
-            if(!curr->left) {
-                nodes.push_back(curr->val);
-                curr = curr->right;
-            }   
-            else {
-                pre = curr->left;
-                while(pre->right && pre->right!=curr)
-                    pre = pre->right;
-                if(!pre->right) {
-                    pre->right = curr;
-                    curr = curr->left;
-                }
-                else {
-                    pre->right = NULL;
-                    nodes.push_back(curr->val);
-                    curr = curr->right;
-                }
-            }
+private:
+    stack<TreeNode*> st;
+    void pushLeft(TreeNode* root) {
+        if (!root) return ;
+        while (root) {
+            st.push(root);
+            root = root -> left;
         }
     }
+public:
     BSTIterator(TreeNode* root) {
-        morrisTraversal(root);
-        // for(auto i : nodes) cout<<i<<' '; cout<<endl;
+        while (root) {
+            st.push(root);
+            root = root -> left;
+        }
     }
     
     int next() {
-        if(index < nodes.size())
-            return nodes[index++];
-        return -1;
+        TreeNode* root = st.top();
+        st.pop();
+        pushLeft(root -> right);
+        return root -> val;
     }
     
     bool hasNext() {
-        return (index < nodes.size());
+        return (!st.empty());
     }
 };
 
