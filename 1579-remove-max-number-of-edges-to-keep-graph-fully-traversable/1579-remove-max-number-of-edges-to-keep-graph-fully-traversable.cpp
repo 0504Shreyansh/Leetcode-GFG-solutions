@@ -1,68 +1,65 @@
 class DSU {
 public:
-    vector<int> rank;
-    vector<int> par;
+    vector<int> rank, par;
     DSU(int n) {
         rank.resize(n);
         for (int i = 0; i < n; i++) 
             par.push_back(i);
     }
-    int findPar(int u) {
-        return (par[u] == u) ? u : par[u] = findPar(par[u]);
+    int find(int u) {
+        return (par[u] == u) ? u : par[u] = find(par[u]);
     }
     void unite(int u, int v) {
-        u = findPar(u);
-        v = findPar(v);
-        if (u != v) {
-            if (rank[u] < rank[v]) {
-                par[u] = v;
-            } else if (rank[u] > rank[v]) {
-                par[v] = u;
-            } else {
-                rank[v]++;
-                par[u] = v;
-            }
+        u = find(u), v = find(v);
+        if (u == v) return ;
+        if (rank[u] < rank[v]) {
+            par[u] = v;
+        } else if (rank[u] > rank[v]) {
+            par[v] = u;
+        } else {
+            par[u] = v;
+            rank[v]++;
         }
     }
-    int comp() {
-        int comps = 0;
-        for (int i = 0; i < par.size(); i++) {
-            comps += (par[i] == i);
-        }
-        return comps == 1;
+    bool sameComponent(int u, int v) {
+        return find(u) == find(v);
+    }
+    bool comps(int n) {
+        int component = 0;
+        for (int i = 0; i < n; i++) 
+            component += (par[i] == i);
+        return component == 1;
     }
 };
 
 class Solution {
 public:
     int maxNumEdgesToRemove(int n, vector<vector<int>>& edges) {
+        sort(rbegin(edges), rend(edges));
+        int edgeCount = 0;
         DSU alice(n), bob(n);
-        sort(rbegin(edges),rend(edges));
-        int ans = 0;
-        for (int i = 0; i < edges.size(); i++) {
-            int u = edges[i][1] - 1, v = edges[i][2] - 1;
-            if (edges[i][0] == 1) {
-                if (alice.findPar(u) != alice.findPar(v)) {
-                    alice.unite(u, v);
+        for (auto &it : edges) {
+            int type = it[0], u = it[1] - 1, v = it[2] - 1;        
+            if (type == 3) {
+                if (!alice.sameComponent(u, v) || !bob.sameComponent(u, v)) {
+                    alice.unite(u, v), bob.unite(u, v);
                 } else {
-                    ans++;
+                    edgeCount++;
                 }
-            } else if (edges[i][0] == 2) {
-                if (bob.findPar(u) != bob.findPar(v)) {
+            } else if (type == 2) {
+                if (!bob.sameComponent(u, v)) {
                     bob.unite(u, v);
                 } else {
-                    ans++;
+                    edgeCount++;
                 }
             } else {
-                if (alice.findPar(u) != alice.findPar(v) ||
-                        bob.findPar(u) != bob.findPar(v)) {
+                if (!alice.sameComponent(u, v)) {
                     alice.unite(u, v);
-                    bob.unite(u, v);
                 } else {
-                    ans++;
+                    edgeCount++;
                 }
             }
         }
-        return (alice.comp() == 1 && bob.comp() == 1) ? ans : -1;
+        return (alice.comps(n) && bob.comps(n)) ? edgeCount : -1;
     }
 };
