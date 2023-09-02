@@ -10,17 +10,15 @@
  * };
  */
 class Solution {
+private:
+    TreeNode* dfs(TreeNode* root, int target) {
+        if (!root) return nullptr;
+        root->left = dfs(root->left, target);
+        root->right = dfs(root->right, target);
+        return (!root->left && !root->right && root->val == target) ? nullptr : root;
+    }
 public:
-    
     TreeNode* removeLeafNodes(TreeNode* root, int target) {
-        
-        if(root->left)
-            root->left = removeLeafNodes(root->left,target);
-        if(root->right)
-            root->right = removeLeafNodes(root->right,target);
-        if(root->val==target && !root->left && !root->right)
-            return NULL;
-        return root;
-            
+        return dfs(root, target);
     }
 };
