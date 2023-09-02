@@ -1,23 +1,30 @@
 class Solution {
 private:
-    int count(vector<int>& left, vector<int>& right, int root) {
-        return (root == -1) ? 0 : 1 + count(left, right, left[root]) + count(left, right, right[root]);
+    int dfs(int root, vector<int>& leftChild, vector<int>& rightChild) {
+        return (root == -1) ? 0 : 1 + dfs(leftChild[root], leftChild, rightChild) + dfs(rightChild[root], leftChild, rightChild); 
     }
 public:
     bool validateBinaryTreeNodes(int n, vector<int>& leftChild, vector<int>& rightChild) {
-        // only 1 parent
-        vector<int> indegree(n, 0);
-        for (int i = 0; i < n; i++) {
+        /* 3 conditions -->
+          1. one node with indegree[node] = 0 (parent)
+          2. no node can have indegree[node] > 1
+          3. all nodes in one component
+        */
+        vector<int> indegree(n), outdegree(n);
+        for (int i = 0; i < n; ++i) {
             if (leftChild[i] != -1) {
-                if (++indegree[leftChild[i]] > 1) return false;
+                if (++indegree[leftChild[i]] > 1) 
+                    return false;
+                outdegree[i]++;
             }
             if (rightChild[i] != -1) {
-                if (++indegree[rightChild[i]] > 1) return false;
+                if (++indegree[rightChild[i]] > 1) 
+                    return false;
+                outdegree[i]++;
             }
         }
-        // only 1 node with no parent
         int root = -1;
-        for (int i = 0; i < n; i++) {
+        for (int i = 0; i < n; ++i) {
             if (indegree[i] == 0) {
                 if (root == -1) {
                     root = i;
@@ -26,7 +33,9 @@ public:
                 }
             }
         }
-        // total nodes must be n
-        return count(leftChild, rightChild, root) == n;
+        if (root == -1) {
+            return false;
+        }
+        return (dfs(root, leftChild, rightChild) == n);
     }
 };
