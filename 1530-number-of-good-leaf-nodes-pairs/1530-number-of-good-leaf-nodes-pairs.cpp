@@ -10,68 +10,55 @@
  * };
  */
 class Solution {
-public:
-    unordered_map<TreeNode*,TreeNode*> nodeToParent;
-    int pairs = 0;
-    void create(TreeNode* root) {
-        if(root == NULL)
-            return ;
-        create(root->left);
-        if(root->left)
-            nodeToParent[root->left] = root;
-        if(root->right)
-            nodeToParent[root->right] = root;
-        create(root->right);
+private:
+    vector<TreeNode*> leafs;
+    map<TreeNode*, TreeNode*> par;
+    void dfs(TreeNode* root) {
+        if (!root) return ;
+        dfs(root -> left);
+        if (root -> left) par[root->left] = root;
+        if (root -> right) par[root -> right] = root;
+        if (!root->left && !root->right) 
+            leafs.push_back(root);
+        dfs(root -> right);
     }
-    void findAns(TreeNode* root, int distance) {
-        if(root == NULL)
-            return ;
-        findAns(root->left, distance);
-        findAns(root->right, distance);
-        if(!root->left && !root->right) {
-            
-            int dis = distance + 1;
-            unordered_map<TreeNode*,int> vis;
-            queue<TreeNode*> Q({root});
-            vis[root] = vis[NULL] = true;
-            
-            while(dis--) {
-                int N = Q.size();
-                while(N--) {
-                    TreeNode* cur = Q.front();
-                    Q.pop();
-                    
-                    if(!cur->left && !cur->right && cur != root)
-                        pairs++;
-                    
-                    if(!vis[cur->left]) {
-                        vis[cur->left] = 1;
-                        Q.push(cur->left);
-                    }
-                    if(!vis[cur->right]) {
-                        vis[cur->right] = 1;
-                        Q.push(cur->right);
-                    }
-                    if(!vis[nodeToParent[cur]]) {
-                        vis[nodeToParent[cur]] = 1;
-                        Q.push(nodeToParent[cur]);
-                    }
+    int count(TreeNode* root, int distance) {
+        queue<TreeNode*> q({root});
+        unordered_map<TreeNode*, bool> visit;
+        visit[root] = 1;
+        int cnt = 0;
+        ++distance;
+        while (q.size() && distance-- > 0) {
+            int size = q.size();
+            while (size--) {
+                TreeNode* cur = q.front();
+                q.pop();
+                if (!cur -> left && !cur -> right) cnt++;
+                if (par[cur] && !visit[par[cur]]) {
+                    visit[par[cur]] = 1;
+                    q.push(par[cur]);
+                }
+                if (cur -> left && !visit[cur -> left]) {
+                    visit[cur -> left] = 1;
+                    q.push(cur -> left);
+                }
+                if (cur -> right && !visit[cur -> right]) {
+                    visit[cur -> right] = 1;
+                    q.push(cur -> right);
                 }
             }
         }
+        return cnt - 1;
     }
+public:
     int countPairs(TreeNode* root, int distance) {
-        
-        // create() -> creates Node -> Parent links
-        nodeToParent[root] = NULL;
-        create(root);
-        
-        
-        findAns(root, distance);
-        
-        // Half the count of pairs bcoz (a, b) & (b, a) will be counted twice
-        pairs /= 2;
-        
-        return pairs;
+        par[root] = nullptr;
+        dfs(root);
+        int ans = 0;
+        for (auto &cur : leafs) {
+            ans += count(cur, distance);
+        }
+        ans /= 2;
+        return ans;
     }
 };
