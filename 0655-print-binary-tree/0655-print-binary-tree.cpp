@@ -10,46 +10,21 @@
  * };
  */
 class Solution {
-public:
-    int findHeight(TreeNode* root) {
-        if(!root) 
-            return 0;
-        return 1 + max(findHeight(root->left), findHeight(root->right));
+private:
+    int height(TreeNode* root) {
+        return (!root) ? 0 : 1 + max(height(root->left), height(root->right));
     }
+    void dfs(TreeNode* root, int x, int y, int H, vector<vector<string>>& answer) {
+        if (!root) return ;
+        dfs(root->left, x+1, y-pow(2, H-x-2), H, answer);
+        answer[x][y] = to_string(root->val);
+        dfs(root->right, x+1, y+pow(2, H-x-2), H, answer);
+    }
+public:
     vector<vector<string>> printTree(TreeNode* root) {
-        
-        int height = findHeight(root), x = 0;
-        int n = height, m = pow(2, height) - 1;
-        
-        vector<vector<string>> ans(n, vector<string> (m));
-        ans[x][(m-1)/2] = to_string(root->val);
-        queue<pair<TreeNode*,int>> q({{root, (m-1)/2}});        
-        
-        while(q.size()) {
-            int sz = q.size();
-            for(int i = 0; i < sz; i++) 
-            {
-                auto cur = q.front();
-                q.pop();
-                TreeNode* curNode = cur.first;
-                int y = cur.second;
-        
-                if(curNode->left) 
-                {
-                    int curr_y = y - (1<<(height-x-2));
-                    ans[x+1][curr_y] = to_string(curNode->left->val);
-                    q.push({curNode->left, curr_y});
-                }
-                if(curNode->right) 
-                {
-                    int curr_y = y + (1<<(height-x-2));
-                    ans[x+1][curr_y] = to_string(curNode->right->val);
-                    q.push({curNode->right, curr_y});
-                }
-            }
-            x++;
-        }
-    
-        return ans;
+        int H = height(root);
+        vector<vector<string>> answer(H, vector<string> (pow(2, H) - 1));
+        dfs(root, 0, (pow(2, H)-1)/2, H, answer);
+        return answer;
     }
 };
