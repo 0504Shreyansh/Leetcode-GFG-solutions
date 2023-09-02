@@ -12,8 +12,7 @@
 class Solution {
 private:
     int dfs(TreeNode* root, int dir) {
-        if (!root) return -1;
-        return (dir == 0) ? 1 + dfs(root -> left, 1) : 1 + dfs(root -> right, 0);
+        return (!root) ? -1 : 1 + ((dir == 0) ? dfs(root -> left, 1) : dfs(root -> right, 0));
     }
     int height(TreeNode* root) {
         return (!root) ? 0 : 1 + max(height(root->left), height(root->right));
