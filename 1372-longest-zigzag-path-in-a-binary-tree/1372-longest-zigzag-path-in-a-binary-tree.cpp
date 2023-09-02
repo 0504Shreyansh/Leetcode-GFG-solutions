@@ -10,38 +10,33 @@
  * };
  */
 class Solution {
-public:
-    int traverse(TreeNode* root, bool dir) {
-        if(!root) 
-            return -1;
-        // Alternating direction
-        return (dir) ? 1+traverse(root->left, !dir) : 1+traverse(root->right, !dir);
+private:
+    int dfs(TreeNode* root, int dir) {
+        if (!root) return -1;
+        return (dir == 0) ? 1 + dfs(root -> left, 1) : 1 + dfs(root -> right, 0);
     }
     int height(TreeNode* root) {
-        return (root==NULL) ? 0 : (1+max(height(root->left), height(root->right)));
+        return (!root) ? 0 : 1 + max(height(root->left), height(root->right));
     }
+public:
     int longestZigZag(TreeNode* root) {
-        
-        int res = 0;
-        int h = height(root);
-        queue<TreeNode*> Q({root});
-        int level = 0;
-        while (Q.size()) {
-            int size = Q.size();
+        int H = height(root);
+        queue<TreeNode*> q({root});
+        int ans = 0;
+        int level = 1;
+        while (q.size()) {
+            int size = q.size();
             while (size--) {
-                TreeNode* node = Q.front();
-                Q.pop();
-                if (node->left)
-                    Q.push(node->left);
-                if (node->right)
-                    Q.push(node->right);
-                // Check for longest zig-zag path
-                if (res > h) break;
-                res = max({res, traverse(node, 0), traverse(node, 1)});
+                TreeNode *cur = q.front();
+                q.pop();
+                if (ans < H - level) {
+                    ans = max({ans, dfs(cur, 0), dfs(cur, 1)});
+                }
+                if (cur->left) q.push(cur->left);
+                if (cur->right) q.push(cur->right);
             }
-            h--;
+            level++;
         }
-        
-        return res;
+        return ans;
     }
 };
