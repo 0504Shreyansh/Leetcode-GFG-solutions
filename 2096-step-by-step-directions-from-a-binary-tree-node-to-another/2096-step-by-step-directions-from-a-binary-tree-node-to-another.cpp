@@ -10,54 +10,46 @@
  * };
  */
 class Solution {
-public:
+private:
+    map<TreeNode*, TreeNode*> par;
+    map<TreeNode*, bool> visit;
     string ans;
-    unordered_map<TreeNode*,TreeNode*> nodeToParent;
-    unordered_map<TreeNode*,int> vis;
-    TreeNode* start;
-    void traverse(TreeNode* root, int &startValue) {
-        if(!root)
-            return ;
-        traverse(root->left, startValue);
-        traverse(root->right, startValue);
-        if(root->left)
-            nodeToParent[root->left] = root;
-        if(root->right)
-            nodeToParent[root->right] = root;
-        if(root->val==startValue)
+    void build(TreeNode* root, int startValue, TreeNode* &start) {
+        if (!root) return ;
+        if (root->left)
+            par[root->left] = root;
+        if (root->right)
+            par[root->right] = root;
+        build(root->left, startValue, start);
+        build(root->right, startValue, start);
+        if (root->val == startValue)
             start = root;
     }
-    
-    bool dfs(TreeNode* start, int &endValue, string &cur) {
-        if(start==NULL || vis[start]==1)
-            return false;
-        if(start->val==endValue) {
+    bool dfs(TreeNode* root, int end, string& cur) {
+        if (root == NULL || visit[root]) return false;
+        if (end == root->val) {
             ans = cur;
             return true;
         }
-        vis[start] = 1;
+        visit[root] = 1;
+        cur += "U";
+        bool P = dfs(par[root], end, cur);
+        cur.pop_back();
         cur += "L";
-        bool a = dfs(start->left, endValue, cur);
+        bool L = dfs(root->left, end, cur);
         cur.pop_back();
         cur += "R";
-        bool b = dfs(start->right, endValue, cur);
+        bool R = dfs(root->right, end, cur);
         cur.pop_back();
-        cur += "U";
-        bool c = dfs(nodeToParent[start], endValue, cur);
-        cur.pop_back();
-        return a || b || c; 
+        return (P || L || R);
     }
-    
-    string getDirections(TreeNode* root, int startValue, int endValue) {
-        
-        // Create node to parent links 
-        nodeToParent[root] = NULL;
-        traverse(root, startValue);
-        
-        // Perform dfs and find out the direction string
+public:
+    string getDirections(TreeNode* root, int startValue, int destValue) {
+        TreeNode* start;
+        par[root] = NULL;
+        build(root, startValue, start);
         string cur;
-        dfs(start, endValue, cur);
-        
+        dfs(start, destValue, cur);
         return ans;
     }
 };
