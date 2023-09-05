@@ -11,30 +11,23 @@
  */
 class Solution {
 private:
-    TreeNode* create(int& i, vector<int>& t, int mini, int maxi, bool& done) {
-        if (i == t.size()) done = 1;
-        if (i >= t.size() || t[i] < mini || t[i] > maxi) return NULL;
-        TreeNode* root = new TreeNode(t[i++]);
-        root -> left = create(i, t, mini, root->val, done);
-        root -> right = create(i, t, root->val, maxi, done);
-        return root;
+    vector<TreeNode*> solve(int low, int high) {
+        if (low > high) return {NULL};
+        if (low == high) return {new TreeNode(low)};
+        vector<TreeNode*> res;
+        for (int i = low; i <= high; i++) {
+            vector<TreeNode*> L = solve(low, i - 1);
+            vector<TreeNode*> R = solve(i + 1, high);
+            for (auto &l : L) {
+                for (auto &r : R) {
+                    res.push_back(new TreeNode(i, l, r));
+                }
+            }
+        }
+        return res;
     }
 public:
     vector<TreeNode*> generateTrees(int n) {
-        vector<int> t;
-        for (int i = 1; i <= n; i++) 
-            t.push_back(i);
-        vector<vector<int>> p({t});
-        while (next_permutation(begin(t),end(t))) {
-            p.push_back(t);
-        }
-        vector<TreeNode*> ans;
-        for (auto &it : p) {
-            int i = 0;
-            bool done = 0;
-            TreeNode* cur = create(i, it, INT_MIN, INT_MAX, done);
-            if (done) ans.push_back(cur);
-        }
-        return ans;
+        return solve(1, n);
     }
 };
