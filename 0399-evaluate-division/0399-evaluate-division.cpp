@@ -2,7 +2,6 @@ class Solution {
 private:
     double dijkstra(string &src, string &dest, map<string, vector<pair<string, double>>>& G) {
         if (!G.count(src) || !G.count(dest)) return -1.0;
-        if (src == dest) return (G.count(src) != 0) ? 1.0 : -1.0;
         map<string, double> dist;
         dist[src] = 1;
         priority_queue<pair<double, string>> pq;
