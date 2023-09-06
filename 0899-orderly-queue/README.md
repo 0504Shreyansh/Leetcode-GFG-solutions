@@ -1,4 +1,4 @@
-<h2><a href="https://leetcode.com/problems/orderly-queue/">899. Orderly Queue</a></h2><h3>Hard</h3><hr><div><p>You are given a string <code>s</code> and an integer <code>k</code>. You can choose one of the first <code>k</code> letters of <code>s</code> and append it at the end of the string..</p>
+<h2><a href="https://leetcode.com/problems/orderly-queue/">899. Orderly Queue</a></h2><h3>Hard</h3><hr><div><p>You are given a string <code>s</code> and an integer <code>k</code>. You can choose one of the first <code>k</code> letters of <code>s</code> and append it at the end of the string.</p>
 
 <p>Return <em>the lexicographically smallest string you could have after applying the mentioned step any number of moves</em>.</p>
 
