@@ -1,27 +1,28 @@
 class Solution {
-public:
-    long long contribution(char ch, string s) {
-        long long count = 0;
-        long long c = 0;
-        long long n = s.size();
-        for(int i = 0; i < n; i++) {
-            if(s[i] != ch) {
-                c++;
+private:
+    long long contribution(char c, string &s) {
+        long long cnt = 0;
+        long long contri = 0;
+        for (auto &it : s) {
+            if (it == c) {
+                contri += (cnt * (cnt + 1)) / 2;
+                cnt = 0;
             } else {
-                count += (c * (c + 1)) / 2;
-                c = 0;
+                cnt++; 
             }
-        }   
-        count += (c * (c + 1)) / 2;
-        // cont. of 'ch' charcater = total - cont. with no 'ch' character
-        return (n * (n + 1)) / 2 - count;
+        }
+        contri += (cnt * (cnt + 1)) / 2;
+        return contri;
     }
-
+public:
     long long appealSum(string s) {
-        long long res = 0;
-        // cont. of each char
-        for(char ch = 'a'; ch <= 'z'; ch++) {
-            res += contribution(ch, s);
+        long long n = s.size();
+        long long res = (n * (n + 1)) / 2;
+        map<char, int> freq;
+        for (auto &it :  s) freq[it]++;
+        res *= (int)freq.size();
+        for (auto &it : freq) {
+            res -= contribution(it.first, s);
         }
         return res;
     }
