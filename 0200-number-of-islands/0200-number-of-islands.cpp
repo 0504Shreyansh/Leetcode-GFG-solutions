@@ -1,36 +1,27 @@
 class Solution {
-public:
-    void bfs(vector<vector<char>> grid, vector<vector<int>> &visited, int i, int j, int n, int m) {
-        queue<pair<int,int>> q;
-        q.push({i,j});
-        int dx[] = {-1,0,0,1}, dy[] = {0,-1,1,0};
-        while(q.size()) {
-            int x = q.front().first, y = q.front().second;
-            q.pop();
-            for(int i=0;i<4;i++) {
-                int new_x = x+dx[i], new_y = y+dy[i];
-                if(new_x>=0 && new_x<n && new_y>=0 && new_y<m && !visited[new_x][new_y] && grid[new_x][new_y]=='1') {
-                    q.push({new_x, new_y});
-                    visited[new_x][new_y] = 1;
-                }
+private:
+    int dirs[5] = {0, -1, 0, 1, 0};
+    void dfs(int i, int j, int n, int m, vector<vector<char>>& grid, vector<vector<int>>& visit) {
+        visit[i][j] = 1;
+        for (int k = 0; k < 4; ++k) {
+            int X = i + dirs[k], Y = j + dirs[k + 1];
+            if (X >= 0 && X < n && Y >= 0 && Y < m && grid[X][Y] == '1' && !visit[X][Y]) {
+                dfs(X, Y, n, m, grid, visit);
             }
         }
     }
+public:
     int numIslands(vector<vector<char>>& grid) {
-        
-        int n = grid.size(), m = grid[0].size();
-        int numberOfIslands = 0;
-        vector<vector<int>> visited(n,vector<int>(m));
-        
-        for(int i=0;i<n;i++) {
-            for(int j=0;j<m;j++) {
-                if(!visited[i][j] && grid[i][j]=='1') {
-                    numberOfIslands++;
-                    bfs(grid,visited,i,j,n,m);
+        int n = grid.size(), m = grid[0].size(), islands = 0;
+        vector<vector<int>> visit(n, vector<int> (m));
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (grid[i][j] == '1' && !visit[i][j]) {
+                    islands++;
+                    dfs(i, j, n, m, grid, visit);
                 }
             }
         }
-        
-        return numberOfIslands;
+        return islands;
     }
 };
