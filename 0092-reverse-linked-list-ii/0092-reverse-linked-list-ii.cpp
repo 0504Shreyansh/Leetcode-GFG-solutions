@@ -40,13 +40,13 @@ public:
             }
             curr = curr -> next;
         }
-        end1 -> next = NULL;
+        end1 -> next = NULL;  // list in 3 parts
         end2 -> next = NULL;
-        h2 = reverse(h2);
-        end1 -> next = h2;
-        curr = h2;
+        h2 = reverse(h2);   // middle reversed
+        end1 -> next = h2;  // first -> middle
+        curr = h2;          // last node
         while (curr -> next) curr = curr -> next;
-        curr -> next = h3;
+        curr -> next = h3;  // middle -> last
         return dummy -> next;
     }
 };
