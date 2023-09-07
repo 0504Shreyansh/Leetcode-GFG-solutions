@@ -45,8 +45,8 @@ public:
         h2 = reverse(h2);
         end1 -> next = h2;
         curr = h2;
-        while (curr && curr -> next) curr = curr -> next;
-        if (curr) curr -> next = h3;
+        while (curr -> next) curr = curr -> next;
+        curr -> next = h3;
         return dummy -> next;
     }
 };
