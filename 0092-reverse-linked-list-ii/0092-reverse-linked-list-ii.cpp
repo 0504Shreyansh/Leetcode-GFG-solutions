@@ -33,7 +33,6 @@ public:
             if (left == 0) {
                 end1 = curr;
                 h2 = curr -> next;
-            
             }
             if (right == -1) {
                 end2 = curr;
@@ -41,8 +40,8 @@ public:
             }
             curr = curr -> next;
         }
-        if (end1) end1 -> next = NULL;
-        if (end2) end2 -> next = NULL;
+        end1 -> next = NULL;
+        end2 -> next = NULL;
         h2 = reverse(h2);
         end1 -> next = h2;
         curr = h2;
