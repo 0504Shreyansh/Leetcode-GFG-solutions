@@ -1,20 +1,15 @@
 class Solution {
-private:
-    int solve(int n, int target, vector<int>& nums, vector<int>& dp) {
-        if (target == 0) return 1;
-        if (dp[target] != -1) return dp[target];
-        int ans = 0;
-        for (int i = 0; i < n; i++) {
-            if (target >= nums[i]) {
-                ans += solve(n, target - nums[i], nums, dp);
-            }
-        }
-        return dp[target] = ans;
-    }
 public:
     int combinationSum4(vector<int>& nums, int target) {
-        int n = nums.size();
-        vector<int> dp(target + 1, -1);
-        return solve(n, target, nums, dp);
+        vector<unsigned long long> dp(target + 1);
+        dp[0] = 1;
+        for (int t = 0; t <= target; t++) {
+            for (auto &it : nums) {
+                if (t >= it) {
+                    dp[t] += dp[t - it];
+                }
+            }
+        }
+        return dp[target];
     }
 };
