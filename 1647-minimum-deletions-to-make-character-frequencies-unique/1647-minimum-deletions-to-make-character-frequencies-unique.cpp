@@ -1,13 +1,14 @@
 class Solution {
 public:
     int minDeletions(string s) {
-        unordered_map<char, int> mp;
+        vector<int> mp(26);
         int maxCount = 0;
         for (auto &it : s)
-            maxCount = max(maxCount, ++mp[it]);
+            maxCount = max(maxCount, ++mp[it - 'a']);
         priority_queue<int> pq;
         for (auto &it : mp)
-            pq.push(it.second);
+            if (it != 0)
+            pq.push(it);
         int dels = 0;
         while (pq.size()) {
             int num = pq.top();
