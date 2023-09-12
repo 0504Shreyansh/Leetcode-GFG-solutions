@@ -8,7 +8,7 @@ public:
         priority_queue<int> pq;
         for (auto &it : mp)
             if (it != 0)
-            pq.push(it);
+                pq.push(it);
         int dels = 0;
         while (pq.size()) {
             int num = pq.top();
