@@ -5,7 +5,7 @@ public:
         while (i < n) {
             if (A[i] != i + 1) {
                 int pos = A[i] - 1;
-                if (pos >= 0 && pos < n && A[i] != A[pos]) {
+                if (A[i] != A[pos]) {
                     swap(A[i], A[pos]);
                 } else {
                     return A[i];
