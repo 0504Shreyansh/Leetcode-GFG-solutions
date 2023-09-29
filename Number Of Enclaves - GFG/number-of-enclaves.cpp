@@ -9,45 +9,39 @@ using namespace std;
 // User function Template for C++
 
 class Solution {
-    private:
-    void dfs(vector<vector<int>> &grid, vector<vector<int>> &vis, int i, int j) {
-        if(i<0||i>=grid.size()||j<0||j>=grid[0].size()||vis[i][j]||!grid[i][j])
-            return ;
-        vis[i][j] = 1;
-        dfs(grid,vis,i+1,j);
-        dfs(grid,vis,i-1,j);
-        dfs(grid,vis,i,j+1);
-        dfs(grid,vis,i,j-1);
-    }
-    public:
-    int numberOfEnclaves(vector<vector<int>> &grid) {
-        
-        int n = grid.size(), m = grid[0].size();
-        vector<vector<int>> visited(n, vector<int>(m));
-        int number_of_enclaves = 0;
-        
-        for(int i=0;i<n;i++) {
-            if(!visited[i][0] && grid[i][0])
-                dfs(grid,visited,i,0);
-            if(!visited[i][m-1] && grid[i][m-1])
-                dfs(grid,visited,i,m-1);
-        }
-        for(int i=0;i<m;i++) {
-            if(!visited[0][i] && grid[0][i])
-                dfs(grid,visited,0,i);
-            if(!visited[n-1][i] && grid[n-1][i])
-                dfs(grid,visited,n-1,i);
-        }
-        
-        for(int i=0;i<n;i++) {
-            for(int j=0;j<m;j++) {
-                if(!visited[i][j] && grid[i][j])
-                    number_of_enclaves++;
+  private:
+    int dirs[5] = {0, -1, 0, 1, 0};
+    int dfs(int i, int j, vector<vector<int>>& grid) {
+        grid[i][j] = 0;
+        int cnt = 1;
+        for (int k = 0; k < 4; k++) {
+            int X = i + dirs[k], Y = j + dirs[k + 1];
+            if (X >= 0 && X < grid.size() && Y >= 0 && Y < grid[0].size() && grid[X][Y] == 1) {
+                cnt += dfs(X, Y, grid);
             }
         }
-        
-        return number_of_enclaves;
-        
+        return cnt;
+    } 
+  public:
+    int numberOfEnclaves(vector<vector<int>> &grid) {
+        int n = grid.size(), m = grid[0].size();
+        for (int i = 0; i < n; i++) {
+            if (grid[i][0] == 1) dfs(i, 0, grid);
+            if (grid[i][m - 1] == 1) dfs(i, m - 1, grid);
+        }
+        for (int j = 0; j < m; j++) {
+            if (grid[0][j] == 1) dfs(0, j, grid);
+            if (grid[n - 1][j] == 1) dfs(n - 1, j, grid);
+        }
+        int ans = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (grid[i][j] == 1) {
+                    ans += dfs(i, j, grid);
+                }
+            }
+        }
+        return ans;
     }
 };
 
