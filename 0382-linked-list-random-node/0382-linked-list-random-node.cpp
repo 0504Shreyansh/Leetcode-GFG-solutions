@@ -10,24 +10,24 @@
  */
 class Solution {
 public:
-    ListNode* x;
-    int n, len = 0;
+    ListNode* node;
+    int N;
     Solution(ListNode* head) {
-        x = head;
-        while(head) {
-            len++;
+        node = head;
+        N = 0;
+        while (head) {
+            N++;
             head = head -> next;
         }
-        
     }
     
     int getRandom() {
-        ListNode* y = x;
-        int z = random() % len;
-        while(z--) 
-            y = y -> next;           
-        
-        return y->val;
+        int count = rand() % N;
+        ListNode* ans = node;
+        while (ans && count--) {
+            ans = ans -> next;
+        }
+        return ans -> val;
     }
 };
 
