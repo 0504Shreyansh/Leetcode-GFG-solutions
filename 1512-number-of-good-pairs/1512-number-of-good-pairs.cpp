@@ -5,9 +5,8 @@ public:
         for (auto &it : nums)
             count[it]++;
         int ans = 0;
-        for (auto &it : count) {
+        for (auto &it : count) 
             ans += (it * (it - 1)) / 2;
-        }
         return ans;
     }
 };
