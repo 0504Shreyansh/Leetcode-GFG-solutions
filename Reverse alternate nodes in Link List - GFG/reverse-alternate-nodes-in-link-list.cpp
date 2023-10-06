@@ -76,7 +76,7 @@ void insert()
 class Solution
 {
     public:
-    Node* reverse(Node* head) {
+Node* reverse(Node* head) {
       Node* curr = head, *prev = NULL, *f;
       while (curr) {
             f = curr -> next;
