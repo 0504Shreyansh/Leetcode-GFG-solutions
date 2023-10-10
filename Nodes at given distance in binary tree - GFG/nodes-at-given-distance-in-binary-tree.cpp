@@ -95,7 +95,8 @@ struct Node
 };
 */
 
-class Solution {
+class Solution
+{
 private:
     map<Node*, Node*> mp;
     Node* find(Node* root, int target) {
