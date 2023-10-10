@@ -95,85 +95,71 @@ struct Node
 };
 */
 
-class Solution
-{
+class Solution {
 private:
-
-public:
-    Node* createMap(Node* root, map<Node*,Node*> &mp, int target) {
-        queue<Node*> q;
-        q.push(root);
+    map<Node*, Node*> mp;
+    Node* find(Node* root, int target) {
+        Node* ans = NULL;
         mp[root] = NULL;
-        Node* targetNode = NULL;
-        while(q.size()) {
-            int n = q.size();
-            for(int i=0;i<n;i++) {
-                Node* p = q.front(); 
+        queue<Node*> q({root});
+        while (q.size()) {
+            int size = q.size();
+            while (size--) {
+                Node* C = q.front();
                 q.pop();
-                if(p->data==target) {
-                    targetNode = p;
+                if (C -> data == target) {
+                    ans = C;
                 }
-                if(p->left) {
-                    mp[p->left] = p;
-                    q.push(p->left);
+                if (C -> left) {
+                    q.push(C->left);
+                    mp[C->left] = C;
                 }
-                if(p->right) {
-                    mp[p->right] = p;
-                    q.push(p->right);
+                if (C -> right) {
+                    q.push(C->right);
+                    mp[C->right] = C;
                 }
             }
         }
-        
-        return targetNode;
-    }
-    vector<int> solve(Node* targetNode, int k, map<Node*,Node*> mp) {
-        vector<int> ans;
-        queue<pair<int,Node*>> q;
-        q.push({0,targetNode});
-        map<Node*,bool> vis;
-        vis[targetNode] = true;
-        while(q.size()) {
-            int n = q.size();
-            bool f = false;
-            for(int i=0;i<n;i++) {
-                auto j = q.front(); q.pop();
-                int dist = j.first;
-                Node* p = j.second;
-                if(dist==k) {
-                    f = true;
-                    ans.push_back(p->data);
-                }
-                if(p->left && !vis[p->left]) {
-                    vis[p->left] = true;
-                    q.push({dist+1,p->left});
-                }
-                if(p->right && !vis[p->right]) {
-                    vis[p->right] = true;
-                    q.push({dist+1,p->right});
-                }
-                if(mp[p] && !vis[mp[p]]) {
-                    vis[mp[p]] = true;
-                    q.push({dist+1,mp[p]});
-                }
-            }
-            if(f) return ans;
-        }
-        
         return ans;
     }
+    vector<int> kDist(Node* root, int k) {
+        map<Node*, bool> visit;
+        visit[root] = 1;
+        k++;
+        queue<Node*> q({root});
+        while (q.size() && k--) {
+            int size = q.size();
+            vector<int> ans;
+            while (size--) {
+                Node* C = q.front();
+                q.pop();
+                ans.push_back(C -> data);
+                if (C -> left && !visit.count(C -> left)) {
+                    visit[C -> left] = 1;
+                    q.push(C -> left);
+                }
+                if (C -> right && !visit.count(C -> right)) {
+                    visit[C -> right] = 1;
+                    q.push(C -> right);
+                }
+                if (mp[C] && !visit.count(mp[C])) {
+                    visit[mp[C]] = 1;
+                    q.push(mp[C]);
+                }
+            }
+            if (k == 0) {
+                sort(begin(ans), end(ans));
+                return ans;
+            }
+        }
+        return {};
+    }
+public:
+
     vector <int> KDistanceNodes(Node* root, int target , int k)
     {
-        map<Node*,Node*> mp;
-        Node* targetNode = createMap(root,mp,target);
-        // vector<int> ans;
-        // for(auto i:mp) {
-        //     cout<<i.first->data<<' '<<i.second->data<<endl;
-        // }
-        
-        
-        vector<int> ans = solve(targetNode,k,mp);
-        sort(ans.begin(),ans.end());
-        return ans;
+        Node* start = find(root, target);
+        return kDist(start, k);
     }
 };
 
