@@ -85,7 +85,6 @@ Node* buildTree(string str)
 class Solution
 {
     public:
-    //Function to find the nodes that are common in both BST.
     void dfs(Node* root, map<int, int>& m, vector<int>& ans, bool var) {
         if (!root) return ;
         dfs(root->left, m, ans, var);
