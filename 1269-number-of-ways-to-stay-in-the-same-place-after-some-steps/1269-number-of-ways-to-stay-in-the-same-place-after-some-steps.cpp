@@ -1,27 +1,15 @@
 class Solution {
-public:
+private:
     const int mod = 1e9 + 7;
-    int solve(int curPos, int steps, int arrLen, vector<vector<int>>& dp) {
-        
-        if(curPos < 0 || curPos >= arrLen) {
-            return 0;
-        }
-        
-        if(steps == 0) {
-            return (curPos == 0) ? 1 : 0;
-        }
-        
-        if(dp[curPos][steps] != -1) {
-            return dp[curPos][steps];
-        }
-        
-        int goBackWays = solve(curPos - 1, steps - 1, arrLen, dp);
-        int goForwardWays = solve(curPos + 1, steps - 1, arrLen, dp);
-        int stay = solve(curPos, steps - 1, arrLen, dp);
-        return dp[curPos][steps] = ((goBackWays + goForwardWays) % mod + stay) % mod;
+    int count(int steps, int pos, int arrLen, vector<vector<int>>& dp) {
+        if (pos < 0 || pos >= arrLen) return 0;
+        if (steps == 0) return (pos == 0) ? 1 : 0;
+        if (dp[steps][pos] != -1) return dp[steps][pos];
+        return dp[steps][pos] = ((count(steps - 1, pos, arrLen, dp) + count(steps - 1, pos - 1, arrLen, dp)) % mod + count(steps - 1, pos + 1, arrLen, dp)) % mod;
     }
+public:
     int numWays(int steps, int arrLen) {
-        vector<vector<int>> dp(steps + 1, vector<int> (steps + 1, -1));
-        return solve(0, steps, arrLen, dp);
+        vector<vector<int>> dp(steps + 1, vector<int> (min(arrLen, steps + 1), -1));
+        return count(steps, 0, arrLen, dp);
     }
 };
