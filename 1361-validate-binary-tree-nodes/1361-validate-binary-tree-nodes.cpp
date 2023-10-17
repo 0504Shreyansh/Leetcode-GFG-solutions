@@ -1,31 +1,36 @@
 class Solution {
 private:
-    int dfs(int root, vector<int>& leftChild, vector<int>& rightChild) {
-        return (root == -1) ? 0 : 1 + dfs(leftChild[root], leftChild, rightChild) + dfs(rightChild[root], leftChild, rightChild); 
+    bool dfs(int u, vector<int>& leftChild, vector<int>& rightChild, vector<int>& visit) {
+        visit[u] = 1;
+        int ans = false;
+        if (leftChild[u] != -1) {
+            if (visit[leftChild[u]]) return true;
+            ans |= dfs(leftChild[u], leftChild, rightChild, visit);
+        }
+        if (rightChild[u] != -1) {
+            if (visit[rightChild[u]]) return true;
+            ans |= dfs(rightChild[u], leftChild, rightChild, visit);
+        }
+        return ans;
     }
 public:
     bool validateBinaryTreeNodes(int n, vector<int>& leftChild, vector<int>& rightChild) {
-        /* 3 conditions -->
-          1. one node with indegree[node] = 0 (parent)
-          2. no node can have indegree[node] > 1
-          3. all nodes in one component
-        */
-        vector<int> indegree(n), outdegree(n);
-        for (int i = 0; i < n; ++i) {
+        
+        // each child has only one 1 parent
+        vector<int> in(n);
+        for (int i = 0; i < n; i++) {
             if (leftChild[i] != -1) {
-                if (++indegree[leftChild[i]] > 1) 
-                    return false;
-                outdegree[i]++;
+                if (++in[leftChild[i]] > 1) return false;
             }
             if (rightChild[i] != -1) {
-                if (++indegree[rightChild[i]] > 1) 
-                    return false;
-                outdegree[i]++;
-            }
+                if (++in[rightChild[i]] > 1) return false;
+            }   
         }
+        
+        // only one root
         int root = -1;
-        for (int i = 0; i < n; ++i) {
-            if (indegree[i] == 0) {
+        for (int i = 0; i < n; i++) {
+            if (in[i] == 0) {
                 if (root == -1) {
                     root = i;
                 } else {
@@ -36,6 +41,14 @@ public:
         if (root == -1) {
             return false;
         }
-        return (dfs(root, leftChild, rightChild) == n);
+        
+        // no cycle
+        vector<int> visit(n, 0);
+        bool isCycle = dfs(root, leftChild, rightChild, visit);
+        if (isCycle) return false;
+        for (int i = 0; i < n; i++) {
+            if (!visit[i]) return false;
+        }
+        return true;
     }
 };
