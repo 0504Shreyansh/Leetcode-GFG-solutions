@@ -9,32 +9,34 @@ using namespace std;
 // User function Template for C++
 
 class Solution {
-  private:
-    bool dfs(vector<int> adj[], vector<int>&pathVis, int start, vector<int> &safeNodes) {
-        pathVis[start] += 2;
-        for(auto nbr: adj[start]) {
-            if(!pathVis[nbr] && dfs(adj,pathVis,nbr,safeNodes))
-                return true;
-            else if(pathVis[nbr]==2) 
-                return true;
-        }
-        safeNodes.push_back(start);
-        pathVis[start]--;
-        return false;
-    }  
   public:
     vector<int> eventualSafeNodes(int V, vector<int> adj[]) {
-        
-        vector<int> pathVis(V);
-        vector<int> safeNodes;
-        
-        for(int i=0;i<V;i++) {
-            if(!pathVis[i])
-                dfs(adj,pathVis,i,safeNodes);
+        vector<int> A[V], in(V);
+        for (int i = 0; i < V; i++) {
+            for (auto &j : adj[i]) {
+                in[i]++;
+                A[j].push_back(i);
+            }
         }
-
-        sort(safeNodes.begin(),safeNodes.end());
-        return safeNodes;
+        queue<int> q;
+        for (int i = 0; i < V; i++) {
+            if (in[i] == 0) {
+                q.push(i);
+            }
+        }
+        vector<int> ans;
+        while (q.size()) {
+            int u = q.front();
+            q.pop();
+            ans.push_back(u);
+            for (int &v : A[u]) {
+                if (--in[v] == 0) {
+                    q.push(v);
+                }
+            }
+        }
+        sort(begin(ans), end(ans));
+        return ans;
     }
 };
 
