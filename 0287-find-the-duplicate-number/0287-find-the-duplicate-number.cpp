@@ -1,19 +1,19 @@
 class Solution {
 public:
     int findDuplicate(vector<int>& A) {
-        int n = A.size(), i = 0;
+        int i = 0, n = A.size();
         while (i < n) {
             if (A[i] != i + 1) {
                 int pos = A[i] - 1;
-                if (A[i] != A[pos]) {
+                if (pos >= 0 && pos < n && A[i] != A[pos]) {
                     swap(A[i], A[pos]);
                 } else {
-                    return A[i];
+                    return A[pos];
                 }
             } else {
                 i++;
             }
         }
-        return 0;
+        return n;
     }
 };
