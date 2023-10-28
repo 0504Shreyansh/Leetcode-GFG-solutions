@@ -1,23 +1,29 @@
-#define mod 1000000007
 class Solution {
+private:
+    const int mod = 1e9 + 7;
+    int solve(int i, int n, char prev, vector<vector<int>>& dp) {
+        if (i >= n) return 1;
+        if (dp[i][prev - 'a'] != -1) return dp[i][prev - 'a'];
+        if (prev == 'z') {
+            return dp[i][prev - 'a'] = ((((solve(i + 1, n, 'a', dp) + solve(i + 1, n, 'e', dp)) % mod + solve(i + 1, n, 'i', dp)) % mod + solve(i + 1, n, 'o', dp)) % mod + solve(i + 1, n, 'u', dp)) % mod;
+        }
+        if (prev == 'a') {
+            return dp[i][prev - 'a'] = solve(i + 1, n, 'e', dp);
+        }
+        if (prev == 'e') {
+            return dp[i][prev - 'a'] = (solve(i + 1, n, 'a', dp) + solve(i + 1, n, 'i', dp)) % mod;
+        }
+        if (prev == 'i') {
+            return dp[i][prev - 'a'] = (((solve(i + 1, n, 'a', dp) + solve(i + 1, n, 'e', dp)) % mod + solve(i + 1, n, 'o', dp)) % mod + solve(i + 1, n, 'u', dp)) % mod;
+        }
+        if (prev == 'o') {
+            return dp[i][prev - 'a'] = (solve(i + 1, n, 'i', dp) + solve(i + 1, n, 'u', dp)) % mod;
+        }
+        return dp[i][prev - 'a'] = solve(i + 1, n, 'a', dp);
+    }
 public:
     int countVowelPermutation(int n) {
-        vector<int> cur(5, -1), prev(5, -1);;
-        for(int i = 0; i < 5; i++) {
-            prev[i] = 1;
-        }
-        for(int i = 2; i <= n; i++) {
-            cur[0] = (prev[1]) % mod;  //a
-            cur[1] = (prev[0] + prev[2]) % mod;  //e
-            cur[2] = ((((prev[0] + prev[1]) % mod) + prev[3]) % mod + prev[4]) % mod;   //i
-            cur[3] = (prev[2] + prev[4]) % mod;  //o
-            cur[4] = (prev[0]) % mod;  //u
-            prev = cur;
-        }
-        int ans = 0;
-        // count all vowels
-        for(int i = 0; i < 5; i++) 
-            ans = (ans + prev[i]) % mod;
-        return ans;
+        vector<vector<int>> dp(n, vector<int> (26, -1));
+        return solve(0, n, 'z', dp);
     }
 };
