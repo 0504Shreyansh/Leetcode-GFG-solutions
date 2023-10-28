@@ -1,29 +1,35 @@
 class Solution {
-private:
-    const int mod = 1e9 + 7;
-    int solve(int i, int n, char prev, vector<vector<int>>& dp) {
-        if (i >= n) return 1;
-        if (dp[i][prev - 'a'] != -1) return dp[i][prev - 'a'];
-        if (prev == 'z') {
-            return dp[i][prev - 'a'] = ((((solve(i + 1, n, 'a', dp) + solve(i + 1, n, 'e', dp)) % mod + solve(i + 1, n, 'i', dp)) % mod + solve(i + 1, n, 'o', dp)) % mod + solve(i + 1, n, 'u', dp)) % mod;
-        }
-        if (prev == 'a') {
-            return dp[i][prev - 'a'] = solve(i + 1, n, 'e', dp);
-        }
-        if (prev == 'e') {
-            return dp[i][prev - 'a'] = (solve(i + 1, n, 'a', dp) + solve(i + 1, n, 'i', dp)) % mod;
-        }
-        if (prev == 'i') {
-            return dp[i][prev - 'a'] = (((solve(i + 1, n, 'a', dp) + solve(i + 1, n, 'e', dp)) % mod + solve(i + 1, n, 'o', dp)) % mod + solve(i + 1, n, 'u', dp)) % mod;
-        }
-        if (prev == 'o') {
-            return dp[i][prev - 'a'] = (solve(i + 1, n, 'i', dp) + solve(i + 1, n, 'u', dp)) % mod;
-        }
-        return dp[i][prev - 'a'] = solve(i + 1, n, 'a', dp);
-    }
 public:
+    const int mod = 1e9 + 7;
     int countVowelPermutation(int n) {
-        vector<vector<int>> dp(n, vector<int> (26, -1));
-        return solve(0, n, 'z', dp);
+        vector<vector<int>> dp(n + 1, vector<int> (26, -1));
+        // dp[0][25]
+
+        for (int i = 0; i < 26; i++) {
+            dp[n][i] = 1;
+        }
+        for (int i = n -  1; i >= 0; i--) {
+            for (char prev = 'z'; prev >= 'a'; prev--) {
+                if (prev == 'z') {
+                    dp[i][prev - 'a'] = ((((dp[i + 1][0] + dp[i + 1][4]) % mod + dp[i + 1][8]) % mod + dp[i + 1][14]) % mod + dp[i + 1][20]) % mod;
+                }
+                else if (prev == 'a') {
+                    dp[i][prev - 'a'] = dp[i + 1][4];
+                }
+                else if (prev == 'e') {
+                    dp[i][prev - 'a'] = (dp[i + 1][0] + dp[i + 1][8]) % mod;
+                }
+                else if (prev == 'i') {
+                    dp[i][prev - 'a'] = (((dp[i + 1][0] + dp[i + 1][4]) % mod + dp[i + 1][14]) % mod + dp[i + 1][20]) % mod;
+                }
+                else if (prev == 'o') {
+                    dp[i][prev - 'a'] = (dp[i + 1][8] + dp[i + 1][20]) % mod;
+                } 
+                else if (prev == 'u') {
+                    dp[i][prev - 'a'] = dp[i + 1][0];
+                }
+            }
+        }
+        return dp[0][25];
     }
 };
