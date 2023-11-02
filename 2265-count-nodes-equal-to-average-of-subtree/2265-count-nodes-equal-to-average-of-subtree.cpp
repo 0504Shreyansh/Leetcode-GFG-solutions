@@ -10,25 +10,24 @@
  * };
  */
 class Solution {
-public:
-    int cnt = 0;
-    pair<int,int> getCount(TreeNode* root) {
-        if(!root) 
-            return {0,0};
-        pair<int,int> l = getCount(root->left);
-        pair<int,int> r = getCount(root->right);
-        pair<int,int> ans;
-        ans.second = root->val + l.second + r.second;
-        ans.first = 1 + l.first + r.first;
-        if(ans.second/ans.first == root->val){
-            // cout<<ans.first<<' '<<ans.second<<' '<<root->val<<endl;    
-            cnt++;
+private:
+    int res;
+    pair<int, int> dfs(TreeNode* root) {
+        if (root == NULL) return {0, 0};
+        pair<int, int> L = dfs(root->left);
+        pair<int, int> R = dfs(root->right);
+        pair<int, int> ans;
+        ans.second = 1 + L.second + R.second;
+        if ((root->val + L.first + R.first) / ans.second == root->val) {
+            res++;
         }
+        ans.first = L.first + R.first + root->val;
         return ans;
     }
+public:
     int averageOfSubtree(TreeNode* root) {
-        pair<int,int> ans = getCount(root);
-        // cout << endl;
-        return cnt;
+        res = 0;
+        dfs(root);
+        return res;
     }
 };
