@@ -17,11 +17,11 @@ private:
         pair<int, int> L = dfs(root->left);
         pair<int, int> R = dfs(root->right);
         pair<int, int> ans;
+        ans.first = L.first + R.first + root->val;
         ans.second = 1 + L.second + R.second;
-        if ((root->val + L.first + R.first) / ans.second == root->val) {
+        if (ans.first / ans.second == root->val) {
             res++;
         }
-        ans.first = L.first + R.first + root->val;
         return ans;
     }
 public:
