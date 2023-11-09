@@ -1,15 +1,15 @@
-#define mod 1000000007
-#define ll long long
 class Solution {
 public:
     int countHomogenous(string s) {
-        ll ans = 0;
-        int j = 0, n = s.size();
-        for(int i = 0; i < s.size(); i++) {
-            while(j + 1 < n && s[i] == s[j + 1]) j++;
-            ll len = j - i + 1;
-            ans = (ans + (len * (len + 1)) / 2) % mod;
-            i = j;
+        const int mod = 1e9 + 7;
+        int n = s.size();
+        int ans = 0;
+        for (int i = 0; i < n; i++) {
+            int j = i;
+            while (j < n && s[i] == s[j]) ++j;
+            long long len = j - i;
+            ans += ((len * (len + 1)) / 2) % mod;
+            i = j - 1;
         }
         return ans;
     }
