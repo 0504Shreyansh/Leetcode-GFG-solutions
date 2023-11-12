@@ -16,7 +16,6 @@ public:
             while (size--) {
                 int bus = q.front()[0], cnt = q.front()[1];
                 q.pop();
-                // cout << bus << ' ' << cnt << endl;
                 if (bus == target) 
                     return cnt;
                 for (int &route : graph[bus]) {
@@ -28,7 +27,6 @@ public:
                     }
                 }
             }
-            // cout << endl;
         }
         return -1;
     }
