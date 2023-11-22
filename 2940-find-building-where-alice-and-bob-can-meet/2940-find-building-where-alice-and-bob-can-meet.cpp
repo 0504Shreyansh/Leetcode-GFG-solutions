@@ -15,9 +15,10 @@ public:
         vector<int> res;
         for (auto &q : queries) {
             int idx1 = nextGreater[q[0]], idx2 = nextGreater[q[1]];
+            if (q[0] > q[1]) swap(q[0], q[1]);
             if (q[0] == q[1]) {
                 res.push_back(q[0]);
-            } else if (q[0] < q[1]) {
+            } else {
                  if (heights[q[0]] < heights[q[1]]) {
                     res.push_back(q[1]);
                 } else {
@@ -31,29 +32,8 @@ public:
                         res.push_back(-1);
                     }
                 }
-            } else {
-                 if (heights[q[0]] <= heights[q[1]]) {
-                    if (idx1 != -1 && idx2 != -1) {
-                        int idx = max(idx1, idx2);
-                        while (idx != -1 && heights[idx] < heights[q[1]]) {
-                            idx = nextGreater[idx];
-                        }
-                        res.push_back(idx);
-                    } else {
-                        res.push_back(-1);
-                    }
-                } else {
-                    res.push_back(q[0]);
-                }
             }
         }
         return res;
     }
 };
-
-/*
-[2,5,-1,5,2]
-[7,6,-1,4,6]
-[0,1,-1,-1,1,1,-1,-1,-1,-1,2,3,-1,-1,3,3]
-[0,1,3,3,5,5,1,1,-1,-1,-1,-1,3,-1,2,3,5,5,3,-1,3,3,-1,-1,5,-1,5,-1,4,5,5,-1,5,-1,5,5]
-*/
