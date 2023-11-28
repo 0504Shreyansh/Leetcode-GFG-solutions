@@ -1,22 +1,26 @@
 class Solution {
 public:
     int numberOfWays(string corridor) {
-        
-        int cnt = count(corridor.begin(),corridor.end(),'S');
-        if(cnt==0 || cnt & 1) return 0;
-        
-        long long res = 1;
-        int s = 0, p = 0;
-        
-        for (auto c : corridor) {
-            if (c=='S') s++;
-            if (s==2 && c=='P') p++;
-            if (s > 2) {
-                res = (res * (p + 1)) % 1000000007;
-                p = 0;
-                s = 1;
+        const int mod = 1e9 + 7;
+        long long ans = 1;
+        int count = 0, plants = 0;
+        for (auto &c : corridor) {
+            if (c == 'S') {
+                if (count == 2) {
+                    ans *= (plants + 1);
+                    ans %= mod;
+                    plants = 0;
+                    count = 0;
+                }
+                count++;
+            } else {
+                if (count == 2) {
+                    plants++;
+                }
             }
         }
-        return res;
+        if (count <= 1 && plants == 0)
+            ans = 0;
+        return ans;
     }
 };
