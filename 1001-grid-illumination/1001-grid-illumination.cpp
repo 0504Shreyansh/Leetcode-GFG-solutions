@@ -1,47 +1,36 @@
 class Solution {
 public:
     vector<int> gridIllumination(int n, vector<vector<int>>& lamps, vector<vector<int>>& queries) {
-        unordered_map<int,int> row;
-        unordered_map<int,int> col;
-        unordered_map<int,int> plusD;
-        unordered_map<int,int> negD;
-        set<pair<int,int>> lampPos;
-        
-        for(auto &it : lamps) {
-            // consider multiple lamps as one 
-            if(lampPos.count({it[0], it[1]})) continue;
-            row[it[0]]++;
-            col[it[1]]++;
-            plusD[it[0] + it[1]]++;
-            negD[it[1] - it[0]]++;
-            lampPos.insert({it[0], it[1]});
+        map<int, int> rows, cols, posDiag, negDiag;
+        map<pair<int, int>, int> present;
+        for (auto &lamp : lamps) {
+            int row = lamp[0], col = lamp[1];
+            if (present.find({row, col}) != present.end()) continue;
+            rows[row]++, cols[col]++, posDiag[col - row]++, negDiag[row + col]++;
+            present[{row, col}] = 1;
         }
-        
+        vector<vector<int>> dirs = {{-1, -1}, {-1, 0}, {-1, 1}, 
+                                    {0, -1}, {0, 0}, {0, 1}, 
+                                    {1, -1}, {1, 0}, {1, 1}}; 
         vector<int> ans;
-        for(auto &q : queries) {
-            int r = q[0], c = q[1];
-            if(row[r] || col[c] || plusD[c + r] || negD[c - r]) {
+        for (auto &q : queries) {
+            int row = q[0], col = q[1];
+            if (rows[row] > 0 || cols[col] > 0 || posDiag[col - row] > 0 || negDiag[row + col] > 0) {
                 ans.push_back(1);
-            }
-            else {
+            } else {
                 ans.push_back(0);
             }
-            
-            for(int i = -1; i <= 1; i++) {
-                for(int j = -1; j <= 1; j++) {
-                    int R = r + i;
-                    int C = c + j;
-                    if(lampPos.count({R, C})) {
-                        lampPos.erase({R, C});
-                        if(--row[R] == 0) row.erase(R);
-                        if(--col[C] == 0) col.erase(C);
-                        if(--plusD[R + C] == 0) plusD.erase(R + C);
-                        if(--negD[C - R] == 0) negD.erase(C - R);
-                    }
+            for (int k = 0; k < 8; k++) {
+                int x = row + dirs[k][0], y = col + dirs[k][1];
+                if (present.count({x, y})) {
+                    present.erase({x, y});
+                    if (--rows[x] == 0) rows.erase(x);
+                    if (--cols[y] == 0) cols.erase(y);
+                    if (--posDiag[y - x] == 0) posDiag.erase(y - x);
+                    if (--negDiag[x + y] == 0) negDiag.erase(x + y);
                 }
             }
         }
-        
         return ans;
     }
 };
