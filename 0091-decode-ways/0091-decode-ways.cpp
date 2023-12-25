@@ -1,17 +1,22 @@
 class Solution {
 public:
     int numDecodings(string s) {
-        int N = s.size();
-        vector<int> dp(N + 1);
-        dp[N] = 1;
+        int N = s.size(), a = 0, b = 1, c = 0;
         for (int i = N - 1; i >= 0; i--) {
             if (1 <= s[i] - '0' && s[i] - '0' <= 9) {
-                dp[i] += dp[i + 1];
+                a += b;
             }
             if (i + 1 < N && 10 <= stoi(s.substr(i, 2)) && stoi(s.substr(i, 2)) <= 26) {
-                dp[i] += dp[i + 2];
+                a += c;
             }
+            c = b;
+            b = a;
+            a = 0;
         }
-        return dp[0];
+        return b;
     }
 };
+
+/*
+dpi, dpi+1, dpi+2 --> a, b, c
+*/
