@@ -9,9 +9,7 @@ public:
             if (i + 1 < N && 10 <= stoi(s.substr(i, 2)) && stoi(s.substr(i, 2)) <= 26) {
                 a += c;
             }
-            c = b;
-            b = a;
-            a = 0;
+            c = b, b = a, a = 0;
         }
         return b;
     }
