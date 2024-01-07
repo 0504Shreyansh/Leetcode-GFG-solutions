@@ -1,38 +1,43 @@
 class Solution {
 private:
     const int mod = 1e9 + 7;
-    int solve(int i, string &s, int sum, int min_sum, int max_sum, bool tight, vector<vector<vector<int>>>& dp) {
+    int solve(int i, int sum, bool tight, string &s, int min_sum, int max_sum, vector<vector<vector<int>>>& dp) {
         if (i >= s.size()) {
             return (min_sum <= sum && sum <= max_sum);
-        } 
-        if (dp[i][tight][sum] != -1) {
-            return dp[i][tight][sum];
         }
-        char upperLimit = (tight) ? s[i] : '9';
+
+        if (dp[i][sum][tight] != -1) {
+            return dp[i][sum][tight];
+        }
+        
         int ans = 0;
-        for (char c = '0'; c <= upperLimit; c++) {
-            ans += solve(i + 1, s, sum + (c - '0'), min_sum, max_sum, tight && (c == upperLimit), dp);
+        int upperLimit = tight ? s[i] - '0' : 9;
+        for (int d = 0; d <= upperLimit; d++) {
+            ans += solve(i + 1, sum + d, tight && d == s[i] - '0', s, min_sum, max_sum, dp);
             ans %= mod;
         }
-        return dp[i][tight][sum] = ans;
+        
+        return dp[i][sum][tight] = ans;
     }
     void decreaseBy1(string &s) {
         int i = s.size() - 1;
-        while (s[i] == '0') {
-            s[i] = '9';
-            i--;
+        while (i >= 0) {
+            if (s[i] == '0') {
+                s[i] = '9';
+                i--;
+            } else {
+                s[i]--;
+                break;
+            }
         }
-        s[i] --;
     }
 public:
     int count(string num1, string num2, int min_sum, int max_sum) {
         decreaseBy1(num1);
-        vector<vector<vector<int>>> dp(23, 
-            vector<vector<int>> (2, 
-                    vector<int> (220, -1)));
-        vector<vector<vector<int>>> dp2(23, 
-            vector<vector<int>> (2, 
-                    vector<int> (220, -1)));
-        return (solve(0, num2, 0, min_sum, max_sum, true, dp) - solve(0, num1, 0, min_sum, max_sum, true, dp2) + mod) % mod;
+        vector<vector<vector<int>>> dp(23, vector<vector<int>> (210, vector<int> (2, -1)));
+        vector<vector<vector<int>>> dp2(23, vector<vector<int>> (210, vector<int> (2, -1)));
+        int ans = solve(0, 0, 1, num1, min_sum, max_sum, dp);
+        int ans2 = solve(0, 0, 1, num2, min_sum, max_sum, dp2);
+        return (ans2 - ans + mod) % mod;
     }
 };
