@@ -2,6 +2,8 @@ class Solution {
 private:
     const int mod = 1e9 + 7;
     #define LL long long
+    
+    // binary exponentiation
     LL power(LL a, LL b) {
         LL ans = 1;
         while (b) {
@@ -23,6 +25,8 @@ private:
     }
 public:
     int numberOfGoodSubsets(vector<int>& nums) {
+        
+        // Mapping of the prime to an index
         vector<int> primes = {2, 3, 5, 7, 11, 13, 17, 19, 23, 29};
         map<int, int> mp;
         int idx = 0;
@@ -30,6 +34,7 @@ public:
             mp[p] = idx++;
         }
         
+        // Noting down the occurence
         int n = nums.size(), ones = 0;
         vector<int> cnt(31);
         for (int &num : nums) {
@@ -40,6 +45,7 @@ public:
             }
         }
         
+        // Creating masks for each of the occured number by the help of primes
         vector<int> masks(31);
         for (int i = 2; i <= 30; i++) {
             if (cnt[i] == 0) continue;
@@ -53,6 +59,7 @@ public:
             if (num > 1) masks[i] |= (1 << mp[num]);
         }
         
+        // Making a subsequence by considering the frequency of each value
         vector<vector<LL>> dp(31, vector<LL> (1024, -1));
         LL ans = 0;
         for (int i = 2; i <= 30; i++) {
@@ -61,6 +68,7 @@ public:
             }
         }
         
+        // At last, either 1 can be taken or not taken
         ans = (ans * power(2, ones)) % mod;
         return ans;
     }
