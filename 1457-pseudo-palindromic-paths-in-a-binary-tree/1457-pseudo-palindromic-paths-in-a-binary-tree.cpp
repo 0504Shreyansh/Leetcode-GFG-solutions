@@ -10,28 +10,25 @@
  * };
  */
 class Solution {
-public:
-    void getPaths(TreeNode* root, vector<int> dig, int &paths) {
-        if(!root) 
-            return;
-        
-        dig[root->val]++;
-        if(!root->left && !root->right) {
+private:
+    int ans;
+    void dfs(TreeNode* root, vector<int>& f) {
+        if (!root) return ;
+        f[root->val]++;
+        if (!root->left && !root->right) {
             int oddCount = 0;
-            for(auto i:dig) {
-                if(i&1) oddCount++;
-            }
-            if(oddCount <= 1) paths++;
+            for (int &i : f) oddCount += (i & 1);
+            ans += (oddCount <= 1);
         }
-        
-        getPaths(root->left,dig,paths);
-        getPaths(root->right,dig,paths);
+        dfs(root->left, f);
+        dfs(root->right, f);
+        f[root->val]--;
     }
+public:
     int pseudoPalindromicPaths (TreeNode* root) {
-        int paths = 0;
-        vector<int> dig(10);
-        getPaths(root,dig,paths);
-        
-        return paths;
+        ans = 0;
+        vector<int> f(10);
+        dfs(root, f);
+        return ans;
     }
 };
