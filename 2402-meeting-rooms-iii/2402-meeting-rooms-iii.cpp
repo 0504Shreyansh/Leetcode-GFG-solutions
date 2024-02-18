@@ -8,6 +8,7 @@ public:
             available.push(-i);
         }
 
+        int maxMeetings = 0;
         vector<int> cnt(n);
         priority_queue<array<long long, 2>> pq;
         for (auto &meet : meetings) {
@@ -19,25 +20,22 @@ public:
             if (!available.empty()) {
                 int room = -available.top();
                 available.pop();
-                ++cnt[room];
+                maxMeetings = max(maxMeetings, ++cnt[room]);
                 pq.push({-endTime, -room});
             } else {
                 int room = -pq.top()[1];
                 long long newTime = -pq.top()[0] + endTime - meet[0];
-                // cout << room << ' ' << -pq.top()[0] << endl;
                 pq.pop();
-                ++cnt[room];
+                maxMeetings = max(maxMeetings, ++cnt[room]);
                 pq.push({-newTime, -room});
             }
         }
         
-        int ans = -1, curr = 0;
         for (int i = 0; i < n; i++) {
-            if (curr < cnt[i]) {
-                curr = cnt[i];
-                ans = i;
+            if (cnt[i] == maxMeetings) {
+                return i;
             }
         }
-        return ans;
+        return -1;
     }
 };
