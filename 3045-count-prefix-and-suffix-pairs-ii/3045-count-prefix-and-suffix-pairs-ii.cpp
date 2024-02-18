@@ -1,5 +1,5 @@
 struct TrieNode {
-    TrieNode *children[25];
+    TrieNode *children[30];
     long long cntEnd = 0;
 };
 
