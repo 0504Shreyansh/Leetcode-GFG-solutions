@@ -2,12 +2,14 @@ class Solution {
 public:
     int findJudge(int n, vector<vector<int>>& trust) {
         if (n == 1) return 1;
-        vector<int> in(n + 1), out(n + 1);
+        map<int, int> truster, trusted;
         for (auto &it : trust) {
-            in[it[1]]++, out[it[0]]++;
+            truster[it[0]]++, trusted[it[1]]++;
         }
-        for (int i = 0; i <= n; i++) {
-            if (in[i] == n - 1 && out[i] == 0) return i; 
+        for (auto &it : trusted) {
+            if (truster[it.first] == 0 && it.second == n - 1) {
+                return it.first;
+            }
         }
         return -1;
     }
