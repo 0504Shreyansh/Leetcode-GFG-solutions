@@ -6,7 +6,7 @@ public:
             graph[it[0]].push_back({it[1], it[2]});
             graph[it[1]].push_back({it[0], it[2]});
         }
-        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
+        priority_queue<pair<int, int>> pq;
         pq.push({0, 0});
         pq.push({0, firstPerson});
         vector<int> vis(n);
@@ -17,8 +17,8 @@ public:
                 continue;
             vis[person] = 1;
             for (auto &[neigh, newTime] : graph[person]) {
-                if (!vis[neigh] && time <= newTime) {
-                    pq.push({newTime, neigh});
+                if (!vis[neigh] && -time <= newTime) {
+                    pq.push({-newTime, neigh});
                 }
             }
         }
