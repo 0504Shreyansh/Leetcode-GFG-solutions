@@ -10,36 +10,23 @@
  * };
  */
 class Solution {
-private:
-    bool check(int level, int curr, int prev) {
-        if (level % 2 == 0) {
-            if (curr % 2 == 0 || prev >= curr) {
-                return false;
-            }
-        } else {
-            if (curr % 2 == 1 || prev <= curr) {
-                return false;
-            }
-        }
-        return true;
-    }
 public:
     bool isEvenOddTree(TreeNode* root) {
-        queue<TreeNode*> q({root});
         int level = 0;
-        while (!q.empty()) {
+        queue<TreeNode*> q({root});
+        while (q.size()) {
             int size = q.size(), prev;
             for (int i = 0; i < size; i++) {
-                TreeNode* curr = q.front();
+                TreeNode* cur = q.front();
                 q.pop();
-                if (i > 0 && !check(level, curr->val, prev)) {
-                    return false;
-                } else if (i == 0 && (curr->val & 1) == (level & 1)) {
-                    return false;
+                if (i > 0) {
+                    if (level % 2 == 0 && prev >= cur -> val) return false;
+                    if (level % 2 == 1 && prev <= cur -> val) return false;
                 }
-                prev = curr->val;
-                if (curr->left) q.push(curr->left);
-                if (curr->right) q.push(curr->right);
+                if (level % 2 == cur -> val % 2) return false; 
+                prev = cur->val;
+                if (cur -> left) q.push(cur -> left);
+                if (cur -> right) q.push(cur -> right);
             }
             level++;
         }
