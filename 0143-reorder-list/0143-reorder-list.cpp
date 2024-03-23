@@ -9,42 +9,47 @@
  * };
  */
 class Solution {
-public:
-    ListNode *reverse(ListNode *head) {
-        ListNode *cur = head, *prev, *forward;
-        while(cur != nullptr) {
-            forward = cur -> next;
-            cur -> next = prev;
-            prev = cur;
-            cur = forward;
+private:
+    ListNode* reverse(ListNode* head) {
+        ListNode* prev = nullptr, *curr = head, *forward;
+        while (curr != nullptr) {
+            forward = curr -> next;
+            curr -> next = prev;
+            prev = curr;
+            curr = forward;
         }
         return prev;
     }
+public:
     void reorderList(ListNode* head) {
-        if (head -> next == nullptr) return ;
-        ListNode *slow = head;
-        ListNode *fast = head -> next;
-        while(fast && fast -> next) {
-            slow = slow -> next;
-            fast = fast -> next -> next;
-        }
-        cout << slow -> val << endl;
-        ListNode *nextHead = slow -> next;
-        slow -> next = nullptr;
-        ListNode *cur2 = reverse(nextHead);
-        ListNode *next2 = cur2 -> next;
+        if (!head->next) return ;
         
-        ListNode *cur1 = head;
-        head = cur1;
-        ListNode *next1 = cur1 -> next;
-        while(cur1 != nullptr && cur2 != nullptr) {
-            cur1 -> next = cur2;
-            cur2 -> next = next1;
-            cur1 = next1;
-            cur2 = next2;
-            if(next1) next1 = next1 -> next;
-            if(next2) next2 = next2 -> next;
+        // find the mid and separate the 2 lists
+        ListNode *slow = head, *fast = head->next;
+        while (fast && fast->next) {
+            slow = slow->next;
+            fast = fast->next->next;
         }
-        // cout << nextHead -> val << endl;
+        
+        ListNode* head1 = head, *head2 = slow->next;
+        slow->next = nullptr;
+        head2 = reverse(head2);
+        
+        // merge alternatively
+        ListNode* curr1 = head1, *curr2 = head2;
+        ListNode* next1 = curr1->next, *next2 = curr2->next;
+        while (curr2 && next1) {
+            curr1->next = curr2;
+            curr2->next = next1;
+            curr1 = next1;
+            next1 = next1->next;
+            curr2 = next2;
+            if (next2) next2 = next2->next;
+        }
+        if (curr2) {
+            curr1->next = curr2;
+        }
+        
+        head = head1;
     }
 };
