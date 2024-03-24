@@ -3,17 +3,15 @@ public:
     int findDuplicate(vector<int>& A) {
         int i = 0, n = A.size();
         while (i < n) {
-            if (A[i] != i + 1) {
-                int pos = A[i] - 1;
-                if (pos >= 0 && pos < n && A[i] != A[pos]) {
-                    swap(A[i], A[pos]);
-                } else {
-                    return A[pos];
-                }
-            } else {
+            if (A[i] == i + 1) {
                 i++;
+            } else {
+                if (A[i] == A[A[i] - 1]) {
+                    return A[i];
+                }
+                swap(A[i], A[A[i] - 1]);
             }
         }
-        return n;
+        return 0; 
     }
 };
